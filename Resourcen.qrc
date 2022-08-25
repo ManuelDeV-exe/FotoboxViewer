@@ -1,0 +1,7 @@
+<RCC>
+  <qresource prefix="Stock">
+    <file>data/Logo.png</file>
+    <file>data/222x148.png</file>
+    <file>data/780x520.png</file>
+  </qresource>
+</RCC>

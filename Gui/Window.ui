@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>FotoboxViewer</class>
+ <widget class="QFrame" name="FotoboxViewer">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1126</width>
+    <height>872</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Frame</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true"/>
+  </property>
+  <widget class="QLabel" name="bild_Gross">
+   <property name="geometry">
+    <rect>
+     <x>50</x>
+     <y>20</y>
+     <width>780</width>
+     <height>520</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="pixmap">
+    <pixmap resource="../Resourcen.qrc">:/Stock/data/780x520.png</pixmap>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+  </widget>
+  <widget class="QLabel" name="bild_2">
+   <property name="geometry">
+    <rect>
+     <x>282</x>
+     <y>574</y>
+     <width>222</width>
+     <height>148</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="pixmap">
+    <pixmap resource="../Resourcen.qrc">:/Stock/data/222x148.png</pixmap>
+   </property>
+  </widget>
+  <widget class="QLabel" name="bild_8">
+   <property name="geometry">
+    <rect>
+     <x>738</x>
+     <y>730</y>
+     <width>222</width>
+     <height>148</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="pixmap">
+    <pixmap resource="../Resourcen.qrc">:/Stock/data/222x148.png</pixmap>
+   </property>
+  </widget>
+  <widget class="QLabel" name="bild_5">
+   <property name="geometry">
+    <rect>
+     <x>54</x>
+     <y>730</y>
+     <width>222</width>
+     <height>148</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="pixmap">
+    <pixmap resource="../Resourcen.qrc">:/Stock/data/222x148.png</pixmap>
+   </property>
+  </widget>
+  <widget class="QLabel" name="bild_1">
+   <property name="geometry">
+    <rect>
+     <x>54</x>
+     <y>574</y>
+     <width>222</width>
+     <height>148</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="pixmap">
+    <pixmap resource="../Resourcen.qrc">:/Stock/data/222x148.png</pixmap>
+   </property>
+  </widget>
+  <widget class="QLabel" name="bild_6">
+   <property name="geometry">
+    <rect>
+     <x>282</x>
+     <y>730</y>
+     <width>222</width>
+     <height>148</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="pixmap">
+    <pixmap resource="../Resourcen.qrc">:/Stock/data/222x148.png</pixmap>
+   </property>
+  </widget>
+  <widget class="QLabel" name="bild_4">
+   <property name="geometry">
+    <rect>
+     <x>738</x>
+     <y>574</y>
+     <width>222</width>
+     <height>148</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="pixmap">
+    <pixmap resource="../Resourcen.qrc">:/Stock/data/222x148.png</pixmap>
+   </property>
+  </widget>
+  <widget class="QLabel" name="bild_3">
+   <property name="geometry">
+    <rect>
+     <x>510</x>
+     <y>574</y>
+     <width>222</width>
+     <height>148</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="pixmap">
+    <pixmap resource="../Resourcen.qrc">:/Stock/data/222x148.png</pixmap>
+   </property>
+  </widget>
+  <widget class="QLabel" name="bild_7">
+   <property name="geometry">
+    <rect>
+     <x>510</x>
+     <y>730</y>
+     <width>222</width>
+     <height>148</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="pixmap">
+    <pixmap resource="../Resourcen.qrc">:/Stock/data/222x148.png</pixmap>
+   </property>
+  </widget>
+  <widget class="QFrame" name="hintergrund">
+   <property name="geometry">
+    <rect>
+     <x>900</x>
+     <y>405</y>
+     <width>120</width>
+     <height>80</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgb(50, 50, 50);</string>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::StyledPanel</enum>
+   </property>
+   <property name="frameShadow">
+    <enum>QFrame::Raised</enum>
+   </property>
+  </widget>
+  <zorder>hintergrund</zorder>
+  <zorder>bild_Gross</zorder>
+  <zorder>bild_2</zorder>
+  <zorder>bild_8</zorder>
+  <zorder>bild_5</zorder>
+  <zorder>bild_1</zorder>
+  <zorder>bild_6</zorder>
+  <zorder>bild_4</zorder>
+  <zorder>bild_3</zorder>
+  <zorder>bild_7</zorder>
+ </widget>
+ <resources>
+  <include location="../Resourcen.qrc"/>
+ </resources>
+ <connections/>
+</ui>
