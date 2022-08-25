@@ -18,7 +18,6 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
 from PySide6.QtWidgets import (QApplication, QFrame, QLabel, QSizePolicy,
     QWidget)
 import Resourcen_rc
-import Resourcen_rc
 
 class Ui_FotoboxViewer(object):
     def setupUi(self, FotoboxViewer):

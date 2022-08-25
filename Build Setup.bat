@@ -1,1 +1,1 @@
-python setup_Materialbestellung.py build
+python setup.py build
