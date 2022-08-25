@@ -1,17 +1,21 @@
 import sys, os
+from turtle import window_height
 import PyQt6, PySide6
 import pathlib
 import time
 from screeninfo import get_monitors
 import PySide6.QtCore as QtCore
 import threading
+import keyboard
+import signal
+
 
 from PySide6.QtGui import *
 from PySide6.QtWidgets import *
 from configparser import ConfigParser
 from PIL import Image
 
-logo_Pfad = str(pathlib.Path('data\\Logo.png').absolute())
+logo_Pfad = str(pathlib.Path('data\\icon.png').absolute())
 global windowIcon # Define Var vor icon
 
 bilder_speicherplatz = str(pathlib.Path("C:\\Users\\Detag\Downloads\\test"))
@@ -60,22 +64,20 @@ class MainWindow(QFrame):
         self.ui.bild_8.setGeometry(monitor_info['width']/6*4.3, monitor_info['heigth']*0.35, img_width * prozent_kleines_bild, img_height * prozent_kleines_bild)
 
 
-class bilder_aktuallisieren_thread(threading.Thread):
-    def __init__(self, id, name):
-        threading.Thread.__init__(self)
-        self.iD = id
-        self.name = name
-        
-    def run(self):
-        while True:
-            aktuallisiere_bilder()
-            time.sleep(5)
-
 def aktuallisiere_bilder():
-    last_image_names = []
-    last_image_names = get_files_in_folder()
-    change_big_images(last_image_names)
-    change_little_iamges(last_image_names)
+    while True:
+        last_image_names = []
+        last_image_names = get_files_in_folder()
+        change_big_images(last_image_names)
+        change_little_iamges(last_image_names)
+    
+def keywatcher():
+    print('keywatcher run')
+    while True:
+        if keyboard.is_pressed('q'):
+            print('kill all')
+            PID = os.getpid()
+            os.kill(PID, signal.SIGTERM)
 
 def change_big_images(last_image_names):
     aktueller_pfad = bilder_speicherplatz + "\\" + last_image_names[len(last_image_names)-1]
@@ -110,14 +112,16 @@ def get_files_in_folder():
     return pfad
             
 if __name__ == '__main__':
+    t1 = threading.Thread(target=aktuallisiere_bilder)
+    t2 = threading.Thread(target=keywatcher)
+
     app = QApplication(sys.argv)
     windowIcon = QIcon(str(logo_Pfad)) # Define Window Icon
 
     MainWindow = MainWindow()
 
-    t1 = bilder_aktuallisieren_thread(1, "t1")
-
     t1.start()
+    t2.start()
 
     MainWindow.show()
     sys.exit(app.exec()) # alles beenden
