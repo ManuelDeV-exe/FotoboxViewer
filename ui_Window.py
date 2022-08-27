@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'Window.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.2.3
+## Created by: Qt User Interface Compiler version 6.3.1
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -64,7 +64,7 @@ class Ui_FotoboxViewer(object):
         self.bild_7.setPixmap(QPixmap(u":/Stock/data/222x148.png"))
         self.hintergrund = QFrame(FotoboxViewer)
         self.hintergrund.setObjectName(u"hintergrund")
-        self.hintergrund.setGeometry(QRect(900, 405, 120, 80))
+        self.hintergrund.setGeometry(QRect(880, 320, 120, 80))
         self.hintergrund.setStyleSheet(u"background-color: rgb(50, 50, 50);")
         self.hintergrund.setFrameShape(QFrame.StyledPanel)
         self.hintergrund.setFrameShadow(QFrame.Raised)

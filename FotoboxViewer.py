@@ -9,16 +9,13 @@ import threading
 import keyboard
 import signal
 
-
+import configobj
 from PySide6.QtGui import *
 from PySide6.QtWidgets import *
-from configparser import ConfigParser
 from PIL import Image
 
 logo_Pfad = str(pathlib.Path('data\\icon.png').absolute())
 global windowIcon # Define Var vor icon
-
-bilder_speicherplatz = str(pathlib.Path("C:\\Users\\Detag\Downloads\\test"))
 
 prozent_grosses_bild = 0.45
 prozent_kleines_bild = 0.17
@@ -72,7 +69,6 @@ def aktuallisiere_bilder():
         change_little_iamges(last_image_names)
     
 def keywatcher():
-    print('keywatcher run')
     while True:
         if keyboard.is_pressed('q'):
             print('kill all')
@@ -111,9 +107,30 @@ def get_files_in_folder():
             pfad.append(images)
     return pfad
             
+def read_config():
+    config_file = configobj.ConfigObj("config.cfg")
+    config_file.encoding = "utf-8"
+
+    global bilder_speicherplatz
+    bilder_speicherplatz = str(pathlib.Path(config_file["Pfade"]["bilder_pfad"]))
+
+
+def create_config():
+    config_file = configobj.ConfigObj()
+    config_file.filename = "config.cfg"
+    config_file.encoding = "utf-8"
+
+    config_file["Pfade"] = {}
+    config_file["Pfade"]["bilder_pfad"] = ""
+
+    config_file.write()
+    
+
 if __name__ == '__main__':
     t1 = threading.Thread(target=aktuallisiere_bilder)
     t2 = threading.Thread(target=keywatcher)
+
+    read_config()
 
     app = QApplication(sys.argv)
     windowIcon = QIcon(str(logo_Pfad)) # Define Window Icon

@@ -166,8 +166,8 @@
   <widget class="QFrame" name="hintergrund">
    <property name="geometry">
     <rect>
-     <x>900</x>
-     <y>405</y>
+     <x>880</x>
+     <y>320</y>
      <width>120</width>
      <height>80</height>
     </rect>
