@@ -1,8 +1,6 @@
 import sys, os
-from turtle import window_height
 import PyQt6, PySide6
 import pathlib
-import time
 from screeninfo import get_monitors
 import PySide6.QtCore as QtCore
 import threading
