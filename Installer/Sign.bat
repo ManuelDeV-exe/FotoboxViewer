@@ -1,0 +1,1 @@
+signtool.exe sign /uw /f "Certifikat.pfx" /p YoLSONgerS1 /t http://timestamp.digicert.com FFW_NAS-Installer_V0.5.exe
