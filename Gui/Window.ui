@@ -182,6 +182,44 @@
     <enum>QFrame::Raised</enum>
    </property>
   </widget>
+  <widget class="QLabel" name="logo_ffwprosdorf">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>20</y>
+     <width>140</width>
+     <height>178</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="pixmap">
+    <pixmap resource="../Resourcen.qrc">:/Stock/data/Wappen_FFW-Prosdorf.png</pixmap>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+  </widget>
+  <widget class="QLabel" name="logo_3ddruck">
+   <property name="geometry">
+    <rect>
+     <x>920</x>
+     <y>20</y>
+     <width>175</width>
+     <height>109</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="pixmap">
+    <pixmap resource="../Resourcen.qrc">:/Stock/data/Logo.png</pixmap>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+  </widget>
   <zorder>hintergrund</zorder>
   <zorder>bild_Gross</zorder>
   <zorder>bild_2</zorder>
@@ -192,6 +230,8 @@
   <zorder>bild_4</zorder>
   <zorder>bild_3</zorder>
   <zorder>bild_7</zorder>
+  <zorder>logo_ffwprosdorf</zorder>
+  <zorder>logo_3ddruck</zorder>
  </widget>
  <resources>
   <include location="../Resourcen.qrc"/>

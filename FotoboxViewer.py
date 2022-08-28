@@ -42,6 +42,9 @@ class MainWindow(QFrame):
 
         self.ui.hintergrund.setGeometry(monitor_info['x'], monitor_info['y'], monitor_info['width'], monitor_info['heigth'])
 
+        self.ui.logo_ffwprosdorf.setGeometry(monitor_info['x'] + 40, monitor_info['y'] + 40,140,178)
+        self.ui.logo_3ddruck.setGeometry(monitor_info['x'] + monitor_info['width'] - 40 - 175, monitor_info['y'] + 40,175,109)
+
         last_image_names = get_files_in_folder()
         aktueller_pfad = bilder_speicherplatz + "\\" + last_image_names[len(last_image_names)-1]
         im = Image.open(aktueller_pfad)

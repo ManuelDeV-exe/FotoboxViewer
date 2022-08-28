@@ -68,6 +68,16 @@ class Ui_FotoboxViewer(object):
         self.hintergrund.setStyleSheet(u"background-color: rgb(50, 50, 50);")
         self.hintergrund.setFrameShape(QFrame.StyledPanel)
         self.hintergrund.setFrameShadow(QFrame.Raised)
+        self.logo_ffwprosdorf = QLabel(FotoboxViewer)
+        self.logo_ffwprosdorf.setObjectName(u"logo_ffwprosdorf")
+        self.logo_ffwprosdorf.setGeometry(QRect(20, 20, 140, 178))
+        self.logo_ffwprosdorf.setPixmap(QPixmap(u":/Stock/data/Wappen_FFW-Prosdorf.png"))
+        self.logo_ffwprosdorf.setAlignment(Qt.AlignCenter)
+        self.logo_3ddruck = QLabel(FotoboxViewer)
+        self.logo_3ddruck.setObjectName(u"logo_3ddruck")
+        self.logo_3ddruck.setGeometry(QRect(920, 20, 175, 109))
+        self.logo_3ddruck.setPixmap(QPixmap(u":/Stock/data/Logo.png"))
+        self.logo_3ddruck.setAlignment(Qt.AlignCenter)
         self.hintergrund.raise_()
         self.bild_Gross.raise_()
         self.bild_2.raise_()
@@ -78,6 +88,8 @@ class Ui_FotoboxViewer(object):
         self.bild_4.raise_()
         self.bild_3.raise_()
         self.bild_7.raise_()
+        self.logo_ffwprosdorf.raise_()
+        self.logo_3ddruck.raise_()
 
         self.retranslateUi(FotoboxViewer)
 
@@ -95,5 +107,7 @@ class Ui_FotoboxViewer(object):
         self.bild_4.setText("")
         self.bild_3.setText("")
         self.bild_7.setText("")
+        self.logo_ffwprosdorf.setText("")
+        self.logo_3ddruck.setText("")
     # retranslateUi
 
