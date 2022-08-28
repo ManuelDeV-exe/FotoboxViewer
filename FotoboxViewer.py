@@ -1,3 +1,4 @@
+import shutil
 import sys, os
 import PyQt6, PySide6
 import pathlib
@@ -82,7 +83,7 @@ def change_big_images(last_image_names):
     MainWindow.ui.bild_Gross.setPixmap(pixmap)
 
 def change_little_iamges(last_image_names):
-    for i in range(len(last_image_names)-2):
+    for i in range(len(last_image_names)):
         aktueller_pfad = bilder_speicherplatz + "\\" + last_image_names[len(last_image_names)-1-i]
         im = Image.open(aktueller_pfad)
         img_width, img_height = im.size
@@ -99,11 +100,11 @@ def change_little_iamges(last_image_names):
 
 def get_files_in_folder():
     pfad = []
-    for images in os.listdir(bilder_speicherplatz):
-        # check if the image ends with png
-        if (images.endswith(".JPG")):
-            pfad.append(images)
-    return pfad
+    _,_, images = next(os.walk(bilder_speicherplatz))
+    for i in range(len(images)):
+        if (images[i].endswith(".JPG")):
+            pfad.append(images[i])
+    return pfad[-9:]
             
 def read_config():
     config_file = configobj.ConfigObj("config.cfg")
