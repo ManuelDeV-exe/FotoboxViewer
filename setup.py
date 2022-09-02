@@ -3,7 +3,7 @@ import os
 from cx_Freeze import setup, Executable
 
 # Build Optionen    
-packages = ["os", "sys", "PySide6", "PyQt6", "pathlib", "time", "screeninfo", "threading", "PIL", "keyboard", "signal", "configobj"]
+packages = ["os", "sys", "PySide6", "PyQt6", "pathlib", "time", "screeninfo", "threading", "PIL", "keyboard", "signal", "configobj", "ftplib", "watchdog"]
 excludes = []
 include_files = ["data/", "config.cfg", "platforms/"]
 

@@ -2,6 +2,7 @@ from ast import arg
 import shutil
 import sys, os
 import time
+from tkinter.tix import IMAGE
 import PyQt6, PySide6
 import pathlib
 from screeninfo import get_monitors
@@ -14,6 +15,7 @@ import ftplib
 import configobj
 from PySide6.QtGui import *
 from PySide6.QtWidgets import *
+import PIL
 from PIL import Image
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
@@ -256,30 +258,45 @@ def rename_and_move_images():
     while True:
         global hochladen_ftp
         if len(hochladen_ftp) >=1:
+
+            if os.path.exists(bilder_speicherplatz +  "\\"  + "ftp_upload" ) ==False:
+                    os.makedirs(bilder_speicherplatz +  "\\"  + "ftp_upload")
+
             for i in range(len(hochladen_ftp)):
                 oldpath = hochladen_ftp[i-1]
                 _,_, images = next(os.walk(bilder_speicherplatz +  "\\"  + "ftp_upload"))
                 count = []
                 for j in range(len(images)):
-                    if (images[j].endswith(".JPG")):
+                    if (images[j].endswith(".jpg")):
                         count.append(j)
-
-                if os.path.exists(bilder_speicherplatz +  "\\"  + "ftp_upload" ) ==False:
-                    os.makedirs(bilder_speicherplatz +  "\\"  + "ftp_upload")
                     
                 new_path = bilder_speicherplatz +  "\\"  + "ftp_upload" +  "\\" + tressor_data["galerie"] + "_" + str(len(count)) + ".jpg"
-                shutil.copy(oldpath, new_path)
+                try:
+                    shutil.copy(oldpath, new_path)
+                except: continue
 
                 try:
                     ftp_upload(new_path, tressor_data["galerie"] + "_" + str(len(count)) + ".jpg")
                 except:
                     print("Fehler beim upload")
-
+                print(hochladen_ftp)
+                print("-----------------")
                 hochladen_ftp.remove(hochladen_ftp[i-1])
+                print(hochladen_ftp)
+
+def img_comp(file_path):
+    img = Image.open(file_path)
+    x,y = img.size
+    img = img.resize((x,y),PIL.Image.ANTIALIAS)
+    img.save(file_path)
 
 def ftp_upload(file_path, filename):
+
+    img_comp(file_path)
+
     ftp = ftplib.FTP(tressor_data["ftp_host"])
     ftp.login(tressor_data["ftp_user"],tressor_data["ftp_password"])
+    ftp.cwd(tressor_data["galerie"])
     new_file_path = str(pathlib.Path(file_path).absolute())
     myfile = open(new_file_path, 'rb')
     print(filename)
