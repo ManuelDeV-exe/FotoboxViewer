@@ -1,4 +1,5 @@
 from ast import arg
+from pickletools import optimize
 import shutil
 import sys, os
 import time
@@ -250,57 +251,69 @@ def keywatcher():
 
 def add_to_list(src_path):
     global hochladen_ftp
-    hochladen_ftp = []
-    hochladen_ftp.append(src_path)
-    print(hochladen_ftp)
+    if "ftp_upload" in src_path:
+        pass
+    else:
+        print(src_path)
+        hochladen_ftp.append(src_path)
+        print("************Aktuelle liste************")
+        print(hochladen_ftp)
+        print("************************")
 
 def rename_and_move_images():
     while True:
         global hochladen_ftp
         if len(hochladen_ftp) >=1:
+            hochladen_ftp_temp = []
+            hochladen_ftp_temp = hochladen_ftp[0]
+            hochladen_ftp.remove(hochladen_ftp_temp)
 
-            if os.path.exists(bilder_speicherplatz +  "\\"  + "ftp_upload" ) ==False:
+            if os.path.exists(bilder_speicherplatz +  "\\ftp_upload") ==False:
                     os.makedirs(bilder_speicherplatz +  "\\"  + "ftp_upload")
 
-            for i in range(len(hochladen_ftp)):
-                oldpath = hochladen_ftp[i-1]
-                _,_, images = next(os.walk(bilder_speicherplatz +  "\\"  + "ftp_upload"))
-                count = []
-                for j in range(len(images)):
-                    if (images[j].endswith(".jpg")):
-                        count.append(j)
-                    
-                new_path = bilder_speicherplatz +  "\\"  + "ftp_upload" +  "\\" + tressor_data["galerie"] + "_" + str(len(count)) + ".jpg"
-                try:
-                    shutil.copy(oldpath, new_path)
-                except: continue
+            oldpath = hochladen_ftp_temp
+            _,_, images = next(os.walk(bilder_speicherplatz +  "\\"  + "ftp_upload"))
+            count = []
+            for j in range(len(images)):
+                if (images[j].endswith(".jpg")):
+                    count.append(j)
+                
+            new_path = bilder_speicherplatz +  "\\ftp_upload\\" + tressor_data["galerie"] + "_" + str(len(count)) + ".jpg"
+            path_ftp = bilder_speicherplatz +  "\\autoimport\\ftp_upload\\" + tressor_data["galerie"] + "_" + str(len(count)) + ".jpg"
+            try:
+                shutil.copy(oldpath, new_path)
+            except: continue
 
-                try:
-                    ftp_upload(new_path, tressor_data["galerie"] + "_" + str(len(count)) + ".jpg")
-                except:
-                    print("Fehler beim upload")
-                print(hochladen_ftp)
-                print("-----------------")
-                hochladen_ftp.remove(hochladen_ftp[i-1])
-                print(hochladen_ftp)
+            try:
+                ftp_upload(new_path, tressor_data["galerie"] + "_" + str(len(count)) + ".jpg")
+            except:
+                print("Fehler beim upload")
 
 def img_comp(file_path):
     img = Image.open(file_path)
-    x,y = img.size
-    img = img.resize((x,y),PIL.Image.ANTIALIAS)
-    img.save(file_path)
+    # x,y = img.size
+    # img = img.resize((x,y),PIL.Image.Resampling.LANCZOS)
+    img.save(file_path, optimize=True, quality=50)
 
 def ftp_upload(file_path, filename):
 
     img_comp(file_path)
 
+    time.sleep(2)
+
     ftp = ftplib.FTP(tressor_data["ftp_host"])
     ftp.login(tressor_data["ftp_user"],tressor_data["ftp_password"])
-    ftp.cwd(tressor_data["galerie"])
+
+    try:
+        ftp.cwd("autoimport/" + tressor_data["galerie"])
+    except:
+        ftp.mkd("autoimport/" + tressor_data["galerie"])
+
     new_file_path = str(pathlib.Path(file_path).absolute())
     myfile = open(new_file_path, 'rb')
-    print(filename)
-    ftp.storlines('STOR ' + filename,myfile)
+    print(f"Upload {filename}")
+
+    ftp.storbinary('STOR ' + filename, myfile)
     ftp.quit()
 
 

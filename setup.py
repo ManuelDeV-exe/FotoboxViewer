@@ -19,7 +19,7 @@ target = Executable(script="FotoboxViewer.py", base=base, icon="data/favicon.ico
 # Setup CX Freez
 setup( 
     name = "FotoboxViewer",
-    version = "0.2",
+    version = "0.3",
     description = "FotoboxViewer",
     options = {'build_exe' : build_exe_options},
     executables = [target]
