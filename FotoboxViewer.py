@@ -200,6 +200,7 @@ def read_config():
 
     global bilder_speicherplatz
     bilder_speicherplatz = str(pathlib.Path(config_file["Pfade"]["bilder_pfad"]))
+    tressor_data["bilder_pfad"] = str(pathlib.Path(config_file["Pfade"]["bilder_pfad"]))
 
     tressor_data["ftp_host"] = config_file["Pictrs"]["ftp_host"]
     tressor_data["ftp_user"] = config_file["Pictrs"]["ftp_user"]
@@ -231,10 +232,10 @@ def aktuallisiere_bilder():
         last_image_names = get_files_in_folder()
 
         try:change_big_images(last_image_names)
-        except:print("Kein Bilde gefunden")
+        except:print("Keine Bilder gefunden")
 
         try:change_little_iamges(last_image_names)
-        except:print("Kein Bilde gefunden")
+        except:print("Keine Bilder gefunden")
 
         time.sleep(3)
         global stop_threads
@@ -254,6 +255,7 @@ def add_to_list(src_path):
     if "ftp_upload" in src_path:
         pass
     else:
+        time.sleep(3)
         print(src_path)
         hochladen_ftp.append(src_path)
         print("************Aktuelle liste************")
@@ -282,10 +284,15 @@ def rename_and_move_images():
             path_ftp = bilder_speicherplatz +  "\\autoimport\\ftp_upload\\" + tressor_data["galerie"] + "_" + str(len(count)) + ".jpg"
             try:
                 shutil.copy(oldpath, new_path)
-            except: continue
+            except: 
+                os.remove(new_path)
+                hochladen_ftp.insert(0, hochladen_ftp_temp)
+                continue
 
+            ftp_image_name = tressor_data["galerie"] + "_" + str(len(count)) + ".jpg"
             try:
-                ftp_upload(new_path, tressor_data["galerie"] + "_" + str(len(count)) + ".jpg")
+                ftp_upload(new_path, ftp_image_name)
+                print(f"Upload abgeschlossen -> {ftp_image_name}")
             except:
                 print("Fehler beim upload")
 
@@ -308,10 +315,11 @@ def ftp_upload(file_path, filename):
         ftp.cwd("autoimport/" + tressor_data["galerie"])
     except:
         ftp.mkd("autoimport/" + tressor_data["galerie"])
+        ftp.cwd("autoimport/" + tressor_data["galerie"])
 
     new_file_path = str(pathlib.Path(file_path).absolute())
     myfile = open(new_file_path, 'rb')
-    print(f"Upload {filename}")
+    print(f"Upload -> {filename}")
 
     ftp.storbinary('STOR ' + filename, myfile)
     ftp.quit()
@@ -333,14 +341,17 @@ def watch_folder():
 
 if __name__ == '__main__':
 
+    tressor_data = read_config()
+
+    if os.path.exists(tressor_data["bilder_pfad"]) == False:
+        os.makedirs(tressor_data["bilder_pfad"])
+
     global stop_threads
     stop_threads = False
     t1 = threading.Thread(target=aktuallisiere_bilder, args=(), name="Bilder Aktualisieren")
     t2 = threading.Thread(target=keywatcher, args=(), name="Colse watcher")
     t3 = threading.Thread(target=watch_folder, args=(), name="Monitor Folder")
     t4 = threading.Thread(target=rename_and_move_images, args=(), name="ftp_upload")
-
-    tressor_data = read_config()
 
     app = QApplication(sys.argv)
     windowIcon = QIcon(str(logo_Pfad)) # Define Window Icon
