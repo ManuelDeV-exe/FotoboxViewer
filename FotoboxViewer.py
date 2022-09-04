@@ -68,11 +68,6 @@ class MainWindow(QFrame):
         self.ui.bild_6.setVisible(False)
         self.ui.bild_7.setVisible(False)
         self.ui.bild_8.setVisible(False)
-   
-class MyEventHandler(FileSystemEventHandler):
-
-    def on_created(self, event):
-        add_to_list(event.src_path)
 
 
 def change_big_images(last_image_names):
@@ -187,7 +182,7 @@ def get_files_in_folder():
     pfad = []
     _,_, images = next(os.walk(bilder_speicherplatz))
     for i in range(len(images)):
-        if (images[i].endswith(".JPG")):
+        if images[i].endswith(".JPG") or images[i].endswith(".jpg"):
             pfad.append(images[i])
     return pfad[-9:]
 
@@ -249,52 +244,36 @@ def keywatcher():
             PID = os.getpid()
             os.kill(PID, signal.SIGTERM)
 
+def rename_and_copy_images(dateipfad):
+        hochladen_ftp_temp = dateipfad
 
-def add_to_list(src_path):
-    global hochladen_ftp
-    if "ftp_upload" in src_path:
-        pass
-    else:
-        time.sleep(3)
-        print(src_path)
-        hochladen_ftp.append(src_path)
-        print("************Aktuelle liste************")
-        print(hochladen_ftp)
-        print("************************")
 
-def rename_and_move_images():
-    while True:
-        global hochladen_ftp
-        if len(hochladen_ftp) >=1:
-            hochladen_ftp_temp = []
-            hochladen_ftp_temp = hochladen_ftp[0]
-            hochladen_ftp.remove(hochladen_ftp_temp)
+        if os.path.exists(bilder_speicherplatz +  "\\ftp_upload") ==False:
+                os.makedirs(bilder_speicherplatz +  "\\"  + "ftp_upload")
 
-            if os.path.exists(bilder_speicherplatz +  "\\ftp_upload") ==False:
-                    os.makedirs(bilder_speicherplatz +  "\\"  + "ftp_upload")
+        oldpath = hochladen_ftp_temp
+        _,_, images = next(os.walk(bilder_speicherplatz +  "\\"  + "ftp_upload"))
+        count = []
+        for j in range(len(images)):
+            if images[j].endswith(".jpg") or images[j].endswith(".JPG"):
+                count.append(j)
+            
+        new_path = bilder_speicherplatz +  "\\ftp_upload\\" + tressor_data["galerie"] + "_" + str(len(count)) + ".jpg"
+        
+        time.sleep(2)
+        try:
+            shutil.copy(oldpath, new_path)
+        except: 
+            os.remove(new_path)
+            hochladen_ftp.insert(0, hochladen_ftp_temp)
 
-            oldpath = hochladen_ftp_temp
-            _,_, images = next(os.walk(bilder_speicherplatz +  "\\"  + "ftp_upload"))
-            count = []
-            for j in range(len(images)):
-                if (images[j].endswith(".jpg")):
-                    count.append(j)
-                
-            new_path = bilder_speicherplatz +  "\\ftp_upload\\" + tressor_data["galerie"] + "_" + str(len(count)) + ".jpg"
-            path_ftp = bilder_speicherplatz +  "\\autoimport\\ftp_upload\\" + tressor_data["galerie"] + "_" + str(len(count)) + ".jpg"
-            try:
-                shutil.copy(oldpath, new_path)
-            except: 
-                os.remove(new_path)
-                hochladen_ftp.insert(0, hochladen_ftp_temp)
-                continue
-
-            ftp_image_name = tressor_data["galerie"] + "_" + str(len(count)) + ".jpg"
-            try:
-                ftp_upload(new_path, ftp_image_name)
-                print(f"Upload abgeschlossen -> {ftp_image_name}")
-            except:
-                print("Fehler beim upload")
+        ftp_image_name = tressor_data["galerie"] + "_" + str(len(count)) + ".jpg"
+        try:
+            ftp_upload(new_path, ftp_image_name)
+            print(f"Upload abgeschlossen -> {ftp_image_name}")
+        except:
+            hochladen_ftp.insert(0, hochladen_ftp_temp)
+            print("Fehler beim upload")
 
 def img_comp(file_path):
     img = Image.open(file_path)
@@ -326,17 +305,31 @@ def ftp_upload(file_path, filename):
 
 
 def watch_folder():
-    event_handler = MyEventHandler()
+    pfad_1 = []
+    pfad_2 = []
+    _,_, images = next(os.walk(bilder_speicherplatz))
+    for i in range(len(images)):
+        if (images[i].endswith(".JPG")) or (images[i].endswith(".jpg")):
+            pfad_1.append(images[i])
+    pfad_2 = pfad_1
+    
+    while True:
+        pfad_1 = []
+        _,_, images = next(os.walk(bilder_speicherplatz))
+        for j in range(len(images)):
+            if (images[j].endswith(".JPG")) or (images[j].endswith(".jpg")):
+                pfad_1.append(images[j])
 
-    my_observer = Observer()
-    my_observer.schedule(event_handler, bilder_speicherplatz, recursive=True)
-    my_observer.start()
-    try:
-        while True:
-            time.sleep(1)
-    finally:
-        my_observer.stop()
-        my_observer.join()
+        for k in range(len(pfad_1)-1):
+            if pfad_1[k] in pfad_2:
+                continue
+            else:
+                rename_and_copy_images(bilder_speicherplatz + "\\" + pfad_1[k])
+                print(bilder_speicherplatz + "\\" + pfad_1[k])
+
+        pfad_2 = pfad_1
+        time.sleep(5)
+
 
 
 if __name__ == '__main__':
@@ -351,7 +344,6 @@ if __name__ == '__main__':
     t1 = threading.Thread(target=aktuallisiere_bilder, args=(), name="Bilder Aktualisieren")
     t2 = threading.Thread(target=keywatcher, args=(), name="Colse watcher")
     t3 = threading.Thread(target=watch_folder, args=(), name="Monitor Folder")
-    t4 = threading.Thread(target=rename_and_move_images, args=(), name="ftp_upload")
 
     app = QApplication(sys.argv)
     windowIcon = QIcon(str(logo_Pfad)) # Define Window Icon
@@ -361,7 +353,6 @@ if __name__ == '__main__':
     t1.start()
     t2.start()
     t3.start()
-    t4.start()
 
     MainWindow.show()
     sys.exit(app.exec()) # alles beenden
