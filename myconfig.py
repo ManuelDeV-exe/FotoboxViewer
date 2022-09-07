@@ -37,4 +37,8 @@ def create_config():
     config_file["Pictrs"]["ftp_password"] = ""
     config_file["Pictrs"]["ftp_port"] = ""
 
+    config_file["Einstellungen"] = {}
+    config_file["prozent_grosses_bild"] = ""
+    config_file["prozent_kleines_bild"] = ""
+    config_file["prozent_werbung"] = ""
     config_file.write()
