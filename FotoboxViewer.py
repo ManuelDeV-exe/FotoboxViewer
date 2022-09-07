@@ -1,9 +1,8 @@
-from ast import arg
-from pickletools import optimize
 import shutil
 import sys, os
 import time
 from tkinter.tix import IMAGE
+from turtle import pd
 import PyQt6, PySide6
 import pathlib
 from screeninfo import get_monitors
@@ -12,8 +11,9 @@ import threading
 import keyboard
 import signal
 import ftplib
+import logging
 
-import configobj
+import myconfig
 from PySide6.QtGui import *
 from PySide6.QtWidgets import *
 import PIL
@@ -30,8 +30,11 @@ tressor_data = {}
 global hochladen_ftp
 hochladen_ftp = []
 
-prozent_grosses_bild = 0.445
-prozent_kleines_bild = 0.16
+tressor_data = myconfig.read_config()
+
+prozent_grosses_bild = float(tressor_data['prozent_grosses_bild']) # Wert in Prozent der Seitenhöhe
+prozent_kleines_bild = float(tressor_data['prozent_kleines_bild']) # Wert in Prozent der Seitenhöhe
+prozent_werbung = float(tressor_data['prozent_werbung']) # Wert in Prozent der Seitenbreite
 
 for m in get_monitors():
     monitor_info = {}
@@ -54,10 +57,13 @@ class MainWindow(QFrame):
         self.setGeometry(monitor_info['x'], monitor_info['y'], monitor_info['width'], monitor_info['heigth'])
         self.showMaximized()
 
-        self.ui.hintergrund.setGeometry(monitor_info['x'], monitor_info['y'], monitor_info['width'], monitor_info['heigth'])
+        pixmap_logo_links = QPixmap("data/logo_links.png")
+        pixmap_logo_links = pixmap_logo_links.scaledToWidth(monitor_info['width']*prozent_werbung, mode=QtCore.Qt.TransformationMode.SmoothTransformation)
+        self.ui.logo_links.setPixmap(pixmap_logo_links)
 
-        self.ui.logo_ffwprosdorf.setGeometry(monitor_info['x'] + 40, monitor_info['y'] + 40,140,178)
-        self.ui.logo_3ddruck.setGeometry(monitor_info['x'] + monitor_info['width'] - 40 - 175, monitor_info['y'] + 40,175,109)
+        pixmap_logo_rechts = QPixmap("data/logo_rechts.png")
+        pixmap_logo_rechts = pixmap_logo_rechts.scaledToWidth(monitor_info['width']*prozent_werbung, mode=QtCore.Qt.TransformationMode.SmoothTransformation)
+        self.ui.logo_rechts.setPixmap(pixmap_logo_rechts)
 
         self.ui.bild_Gross.setVisible(False)
         self.ui.bild_1.setVisible(False)
@@ -69,158 +75,57 @@ class MainWindow(QFrame):
         self.ui.bild_7.setVisible(False)
         self.ui.bild_8.setVisible(False)
 
-
 def change_big_images(last_image_names):
-    aktueller_pfad = bilder_speicherplatz + "\\" + last_image_names[len(last_image_names)-1]
-
-    scaled = calc_big_image(aktueller_pfad)
-    pos_x ,pos_y = calc_big_image_pos(scaled["width"], scaled["heigth"])
+    aktueller_pfad = tressor_data["bilder_pfad"] + "\\" + last_image_names[len(last_image_names)-1]
 
     pixmap = QPixmap(aktueller_pfad)
-    pixmap = pixmap.scaled(scaled["width"], scaled["heigth"])
+    pixmap = pixmap.scaledToHeight(monitor_info["heigth"] * prozent_grosses_bild, mode=QtCore.Qt.TransformationMode.SmoothTransformation)
     MainWindow.ui.bild_Gross.setPixmap(pixmap)
 
-    MainWindow.ui.bild_Gross.setGeometry(pos_x,pos_y, scaled["width"], scaled["heigth"])
     MainWindow.ui.bild_Gross.setVisible(True)
 
 def change_little_iamges(last_image_names):
     for i in range(len(last_image_names)):
-        aktueller_pfad = bilder_speicherplatz + "\\" + last_image_names[len(last_image_names)-1-i]
-        
-        scaled = calc_little_image(aktueller_pfad)
-        pos_x ,pos_y = calc_little_image_pos(scaled["width"], scaled["heigth"], i)
+        aktueller_pfad = tressor_data["bilder_pfad"] + "\\" + last_image_names[len(last_image_names)-1-i]
         
         pixmap = QPixmap(aktueller_pfad)
-        pixmap = pixmap.scaled(scaled["width"], scaled["heigth"])
+        pixmap = pixmap.scaledToHeight(monitor_info["heigth"] * prozent_kleines_bild, mode=QtCore.Qt.TransformationMode.SmoothTransformation)
 
-        img_margin = (scaled["width"] * 0.15)
 
         if i == 1 : 
             MainWindow.ui.bild_1.setPixmap(pixmap)
-            MainWindow.ui.bild_1.setGeometry(pos_x - img_margin, pos_y, scaled["width"], scaled["heigth"])
             MainWindow.ui.bild_1.setVisible(True)
         if i == 2 :
             MainWindow.ui.bild_2.setPixmap(pixmap)
-            MainWindow.ui.bild_2.setGeometry(pos_x - (img_margin / 2), pos_y, scaled["width"], scaled["heigth"])
             MainWindow.ui.bild_2.setVisible(True)
         if i == 3 : 
             MainWindow.ui.bild_3.setPixmap(pixmap)
-            MainWindow.ui.bild_3.setGeometry(pos_x + (img_margin / 2), pos_y, scaled["width"], scaled["heigth"])
             MainWindow.ui.bild_3.setVisible(True)
         if i == 4 : 
             MainWindow.ui.bild_4.setPixmap(pixmap)
-            MainWindow.ui.bild_4.setGeometry(pos_x + img_margin, pos_y, scaled["width"], scaled["heigth"])
             MainWindow.ui.bild_4.setVisible(True)
         if i == 5 : 
             MainWindow.ui.bild_5.setPixmap(pixmap)
-            MainWindow.ui.bild_5.setGeometry(pos_x - img_margin, pos_y, scaled["width"], scaled["heigth"])
             MainWindow.ui.bild_5.setVisible(True)
         if i == 6 : 
             MainWindow.ui.bild_6.setPixmap(pixmap)
-            MainWindow.ui.bild_6.setGeometry(pos_x - (img_margin / 2), pos_y, scaled["width"], scaled["heigth"])
             MainWindow.ui.bild_6.setVisible(True)
         if i == 7 : 
             MainWindow.ui.bild_7.setPixmap(pixmap)
-            MainWindow.ui.bild_7.setGeometry(pos_x + (img_margin / 2), pos_y, scaled["width"], scaled["heigth"])
             MainWindow.ui.bild_7.setVisible(True)
         if i == 8 : 
             MainWindow.ui.bild_8.setPixmap(pixmap)
-            MainWindow.ui.bild_8.setGeometry(pos_x + img_margin, pos_y, scaled["width"], scaled["heigth"])
             MainWindow.ui.bild_8.setVisible(True)
-
-def calc_big_image(aktueller_pfad):
-    global big_heigth
-    scaled = {}
-    im = Image.open(aktueller_pfad)
-    img_width, img_height = im.size
-
-    scaled["format"] = img_width/img_height
-
-    scaled["width"] = monitor_info['width'] * prozent_grosses_bild
-    scaled["heigth"] = scaled["width"] / img_width * img_height
-
-    big_heigth = scaled["heigth"]
-    return scaled
-
-def calc_big_image_pos(width, heigth):
-    global big_pos_y
-    
-    pos_x = (monitor_info["width"] / 2) - (width / 2)
-    pos_y = (monitor_info["heigth"] + heigth/2) * 0.01
-
-    big_pos_y = pos_y
-
-    return pos_x, pos_y
-
-
-def calc_little_image(aktueller_pfad):
-    scaled = {}
-    im = Image.open(aktueller_pfad)
-    img_width, img_height = im.size
-
-    scaled["format"] = img_width/img_height
-
-    scaled["width"] = monitor_info['width'] * prozent_kleines_bild
-    scaled["heigth"] = scaled["width"] / img_width * img_height
-
-    return scaled
-
-def calc_little_image_pos(width, heigth, aktuellesBild):
-    global big_pos_y
-    
-    if aktuellesBild < 5: 
-        pos_x = (monitor_info["width"] / 5 * aktuellesBild) - (width / 2)
-        pos_y = (monitor_info["heigth"] + heigth/2 + big_heigth) * 0.24
-    elif aktuellesBild >= 5: 
-        pos_x = (monitor_info["width"] / 5 * (aktuellesBild - 4)) - (width / 2)
-        pos_y = (monitor_info["heigth"] + heigth/2 + big_heigth) * 0.328
-
-    return pos_x, pos_y
 
 
 def get_files_in_folder():
     pfad = []
-    _,_, images = next(os.walk(bilder_speicherplatz))
+    images = os.listdir(tressor_data["bilder_pfad"])
     for i in range(len(images)):
         if images[i].endswith(".JPG") or images[i].endswith(".jpg"):
             pfad.append(images[i])
     return pfad[-9:]
-
-            
-def read_config():
-    tressor_data = {}
-
-    config_file = configobj.ConfigObj("config.cfg")
-    config_file.encoding = "utf-8"
-
-    global bilder_speicherplatz
-    bilder_speicherplatz = str(pathlib.Path(config_file["Pfade"]["bilder_pfad"]))
-    tressor_data["bilder_pfad"] = str(pathlib.Path(config_file["Pfade"]["bilder_pfad"]))
-
-    tressor_data["ftp_host"] = config_file["Pictrs"]["ftp_host"]
-    tressor_data["ftp_user"] = config_file["Pictrs"]["ftp_user"]
-    tressor_data["ftp_password"] = config_file["Pictrs"]["ftp_password"]
-    tressor_data["ftp_port"] = config_file["Pictrs"]["ftp_port"]
-    tressor_data["galerie"] = config_file["Pictrs"]["galerie"]
-
-    return tressor_data
-
-def create_config():
-    config_file = configobj.ConfigObj()
-    config_file.filename = "config.cfg"
-    config_file.encoding = "utf-8"
-
-    config_file["Pfade"] = {}
-    config_file["Pfade"]["bilder_pfad"] = ""
-
-    config_file["Pictrs"] = {}
-    config_file["Pictrs"]["ftp_host"] = ""
-    config_file["Pictrs"]["ftp_user"] = ""
-    config_file["Pictrs"]["ftp_password"] = ""
-    config_file["Pictrs"]["ftp_port"] = ""
-
-    config_file.write()
-
+          
 def aktuallisiere_bilder():
     while True:
         last_image_names = []
@@ -233,9 +138,6 @@ def aktuallisiere_bilder():
         except:print("Keine Bilder gefunden")
 
         time.sleep(3)
-        global stop_threads
-        if stop_threads:
-            break
 
 def keywatcher():
     while True:
@@ -244,48 +146,37 @@ def keywatcher():
             PID = os.getpid()
             os.kill(PID, signal.SIGTERM)
 
-def rename_and_copy_images(dateipfad):
-        hochladen_ftp_temp = dateipfad
+def rename_copy_upload_log(dateipfad, dateiname):
+        if os.path.exists(tressor_data["bilder_pfad"] +  "\\ftp_upload") ==False:
+                os.makedirs(tressor_data["bilder_pfad"] +  "\\"  + "ftp_upload")
 
-
-        if os.path.exists(bilder_speicherplatz +  "\\ftp_upload") ==False:
-                os.makedirs(bilder_speicherplatz +  "\\"  + "ftp_upload")
-
-        oldpath = hochladen_ftp_temp
-        _,_, images = next(os.walk(bilder_speicherplatz +  "\\"  + "ftp_upload"))
+        old_path = dateipfad
+        _,_, images = next(os.walk(tressor_data["bilder_pfad"] +  "\\"  + "ftp_upload"))
         count = []
         for j in range(len(images)):
             if images[j].endswith(".jpg") or images[j].endswith(".JPG"):
                 count.append(j)
             
-        new_path = bilder_speicherplatz +  "\\ftp_upload\\" + tressor_data["galerie"] + "_" + str(len(count)) + ".jpg"
-        
-        time.sleep(2)
-        try:
-            shutil.copy(oldpath, new_path)
-        except: 
-            os.remove(new_path)
-            hochladen_ftp.insert(0, hochladen_ftp_temp)
+        new_path = f"{tressor_data['bilder_pfad']}\\ftp_upload\\{tressor_data['galerie']}_{str(len(count))}.jpg"
 
         ftp_image_name = tressor_data["galerie"] + "_" + str(len(count)) + ".jpg"
         try:
-            ftp_upload(new_path, ftp_image_name)
+            ftp_upload(old_path, new_path, ftp_image_name)
+            logging.info(f"Upload abgeschlossen -> {ftp_image_name}")
             print(f"Upload abgeschlossen -> {ftp_image_name}")
+            log_upload(dateiname)
         except:
-            hochladen_ftp.insert(0, hochladen_ftp_temp)
-            print("Fehler beim upload")
+            logging.warning(f"Fehler beim upload -> {dateipfad}")
+            print(f"Fehler beim upload -> {dateipfad}")
 
-def img_comp(file_path):
-    img = Image.open(file_path)
-    # x,y = img.size
-    # img = img.resize((x,y),PIL.Image.Resampling.LANCZOS)
+def img_comp(old_path, file_path):
+    img = Image.open(old_path)
     img.save(file_path, optimize=True, quality=50)
+    time.sleep(0.5)
 
-def ftp_upload(file_path, filename):
+def ftp_upload(old_path, file_path, filename):
 
-    img_comp(file_path)
-
-    time.sleep(2)
+    img_comp(old_path, file_path)
 
     ftp = ftplib.FTP(tressor_data["ftp_host"])
     ftp.login(tressor_data["ftp_user"],tressor_data["ftp_password"])
@@ -298,49 +189,77 @@ def ftp_upload(file_path, filename):
 
     new_file_path = str(pathlib.Path(file_path).absolute())
     myfile = open(new_file_path, 'rb')
-    print(f"Upload -> {filename}")
+
+    logging.info(f"Upload start -> {filename}")
+    print(f"Upload start -> {filename}")
 
     ftp.storbinary('STOR ' + filename, myfile)
     ftp.quit()
 
+def read_upload_log():
+    aktuelle_upload_liste = ()
+    config_path = f"{tressor_data['bilder_pfad']}/upload_log.cfg"
+    config_file = open(config_path, 'r')
+
+    aktuelle_upload_liste = config_file.readlines()
+
+    config_file.close()
+    return aktuelle_upload_liste
+
+def log_upload(file_upload):
+    aktuelle_upload_liste = read_upload_log()
+    aktuelle_upload_liste.append(file_upload)
+
+    config_path = f"{tressor_data['bilder_pfad']}/upload_log.cfg"
+    config_file = open(config_path, "w+")
+
+    for i in range(len(aktuelle_upload_liste)):
+        if aktuelle_upload_liste[i].endswith("\n")==False:
+            aktuelle_upload_liste[i] = aktuelle_upload_liste[i] + "\n"
+        config_file.writelines(aktuelle_upload_liste[i])
+
+    config_file.close()
 
 def watch_folder():
-    pfad_1 = []
-    pfad_2 = []
-    _,_, images = next(os.walk(bilder_speicherplatz))
-    for i in range(len(images)):
-        if (images[i].endswith(".JPG")) or (images[i].endswith(".jpg")):
-            pfad_1.append(images[i])
-    pfad_2 = pfad_1
-    
     while True:
-        pfad_1 = []
-        _,_, images = next(os.walk(bilder_speicherplatz))
-        for j in range(len(images)):
-            if (images[j].endswith(".JPG")) or (images[j].endswith(".jpg")):
-                pfad_1.append(images[j])
+        pfad = []
+        backup_nach_upload = tressor_data["bilder_pfad"] + "/backup"
+        images = os.listdir(tressor_data["bilder_pfad"])
+        for i in range(len(images)):
+            if images[i].endswith(".JPG") or images[i].endswith(".jpg"):
+                pfad.append(images[i])
 
-        for k in range(len(pfad_1)-1):
-            if pfad_1[k] in pfad_2:
-                continue
-            else:
-                rename_and_copy_images(bilder_speicherplatz + "\\" + pfad_1[k])
-                print(bilder_speicherplatz + "\\" + pfad_1[k])
+        for k in range(len(pfad)):
+            bereits_hochgeladen = read_upload_log()
 
-        pfad_2 = pfad_1
-        time.sleep(5)
+            res = any(pfad[k] in string for string in bereits_hochgeladen)
+            if res == False:
+                rename_copy_upload_log(dateipfad=tressor_data["bilder_pfad"] + "\\" + pfad[k], dateiname=pfad[k])
 
-
+        try:
+            res = pfad[:-9]
+            for j in range(len(res)):
+                if os.path.exists(backup_nach_upload)==False:os.makedirs(backup_nach_upload)
+                shutil.move(tressor_data["bilder_pfad"] + "\\" + pfad[j], backup_nach_upload)
+        except:
+            pass
 
 if __name__ == '__main__':
 
-    tressor_data = read_config()
+    # Pfade überprüfen
 
     if os.path.exists(tressor_data["bilder_pfad"]) == False:
         os.makedirs(tressor_data["bilder_pfad"])
 
-    global stop_threads
-    stop_threads = False
+    config_path = f"{tressor_data['bilder_pfad']}/upload_log.cfg"
+    if os.path.exists(config_path) == False:
+        f=open(config_path, 'w+')
+        f.close()
+    
+    # Code
+
+    logging.basicConfig(filename=tressor_data["bilder_pfad"] + '/log.log', encoding='utf-8', level=logging.INFO)
+
     t1 = threading.Thread(target=aktuallisiere_bilder, args=(), name="Bilder Aktualisieren")
     t2 = threading.Thread(target=keywatcher, args=(), name="Colse watcher")
     t3 = threading.Thread(target=watch_folder, args=(), name="Monitor Folder")

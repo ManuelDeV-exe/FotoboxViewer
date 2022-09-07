@@ -15,81 +15,190 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QFrame, QLabel, QSizePolicy,
-    QWidget)
+from PySide6.QtWidgets import (QApplication, QFrame, QHBoxLayout, QLabel,
+    QSizePolicy, QSpacerItem, QVBoxLayout, QWidget)
 import Resourcen_rc
 
 class Ui_FotoboxViewer(object):
     def setupUi(self, FotoboxViewer):
         if not FotoboxViewer.objectName():
             FotoboxViewer.setObjectName(u"FotoboxViewer")
-        FotoboxViewer.resize(1126, 872)
-        FotoboxViewer.setStyleSheet(u"")
+        FotoboxViewer.resize(1508, 971)
+        FotoboxViewer.setStyleSheet(u"background-color: rgb(125, 125, 125);")
+        self.verticalLayout_2 = QVBoxLayout(FotoboxViewer)
+        self.verticalLayout_2.setObjectName(u"verticalLayout_2")
+        self.verticalSpacer_4 = QSpacerItem(20, 15, QSizePolicy.Minimum, QSizePolicy.Minimum)
+
+        self.verticalLayout_2.addItem(self.verticalSpacer_4)
+
+        self.horizontalLayout = QHBoxLayout()
+        self.horizontalLayout.setObjectName(u"horizontalLayout")
+        self.horizontalSpacer = QSpacerItem(20, 20, QSizePolicy.Maximum, QSizePolicy.Minimum)
+
+        self.horizontalLayout.addItem(self.horizontalSpacer)
+
+        self.verticalLayout = QVBoxLayout()
+        self.verticalLayout.setObjectName(u"verticalLayout")
+        self.verticalSpacer_5 = QSpacerItem(20, 20, QSizePolicy.Minimum, QSizePolicy.Maximum)
+
+        self.verticalLayout.addItem(self.verticalSpacer_5)
+
+        self.logo_links = QLabel(FotoboxViewer)
+        self.logo_links.setObjectName(u"logo_links")
+        self.logo_links.setPixmap(QPixmap(u":/Stock/data/Logo.png"))
+        self.logo_links.setAlignment(Qt.AlignCenter)
+
+        self.verticalLayout.addWidget(self.logo_links)
+
+        self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
+
+        self.verticalLayout.addItem(self.verticalSpacer)
+
+
+        self.horizontalLayout.addLayout(self.verticalLayout)
+
+        self.horizontalSpacer_7 = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+
+        self.horizontalLayout.addItem(self.horizontalSpacer_7)
+
         self.bild_Gross = QLabel(FotoboxViewer)
         self.bild_Gross.setObjectName(u"bild_Gross")
-        self.bild_Gross.setGeometry(QRect(50, 20, 780, 520))
+        self.bild_Gross.setEnabled(True)
+        self.bild_Gross.setStyleSheet(u"")
         self.bild_Gross.setPixmap(QPixmap(u":/Stock/data/780x520.png"))
+        self.bild_Gross.setScaledContents(False)
         self.bild_Gross.setAlignment(Qt.AlignCenter)
-        self.bild_2 = QLabel(FotoboxViewer)
-        self.bild_2.setObjectName(u"bild_2")
-        self.bild_2.setGeometry(QRect(282, 574, 222, 148))
-        self.bild_2.setPixmap(QPixmap(u":/Stock/data/222x148.png"))
-        self.bild_8 = QLabel(FotoboxViewer)
-        self.bild_8.setObjectName(u"bild_8")
-        self.bild_8.setGeometry(QRect(738, 730, 222, 148))
-        self.bild_8.setPixmap(QPixmap(u":/Stock/data/222x148.png"))
-        self.bild_5 = QLabel(FotoboxViewer)
-        self.bild_5.setObjectName(u"bild_5")
-        self.bild_5.setGeometry(QRect(54, 730, 222, 148))
-        self.bild_5.setPixmap(QPixmap(u":/Stock/data/222x148.png"))
+
+        self.horizontalLayout.addWidget(self.bild_Gross)
+
+        self.horizontalSpacer_8 = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+
+        self.horizontalLayout.addItem(self.horizontalSpacer_8)
+
+        self.verticalLayout_3 = QVBoxLayout()
+        self.verticalLayout_3.setSpacing(6)
+        self.verticalLayout_3.setObjectName(u"verticalLayout_3")
+        self.verticalSpacer_6 = QSpacerItem(20, 20, QSizePolicy.Minimum, QSizePolicy.Maximum)
+
+        self.verticalLayout_3.addItem(self.verticalSpacer_6)
+
+        self.logo_rechts = QLabel(FotoboxViewer)
+        self.logo_rechts.setObjectName(u"logo_rechts")
+        self.logo_rechts.setPixmap(QPixmap(u":/Stock/data/Logo.png"))
+        self.logo_rechts.setAlignment(Qt.AlignCenter)
+
+        self.verticalLayout_3.addWidget(self.logo_rechts)
+
+        self.verticalSpacer_2 = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
+
+        self.verticalLayout_3.addItem(self.verticalSpacer_2)
+
+
+        self.horizontalLayout.addLayout(self.verticalLayout_3)
+
+        self.horizontalSpacer_2 = QSpacerItem(20, 20, QSizePolicy.Maximum, QSizePolicy.Minimum)
+
+        self.horizontalLayout.addItem(self.horizontalSpacer_2)
+
+
+        self.verticalLayout_2.addLayout(self.horizontalLayout)
+
+        self.verticalSpacer_3 = QSpacerItem(20, 15, QSizePolicy.Minimum, QSizePolicy.Minimum)
+
+        self.verticalLayout_2.addItem(self.verticalSpacer_3)
+
+        self.horizontalLayout_2 = QHBoxLayout()
+        self.horizontalLayout_2.setSpacing(25)
+        self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
+        self.horizontalSpacer_3 = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+
+        self.horizontalLayout_2.addItem(self.horizontalSpacer_3)
+
         self.bild_1 = QLabel(FotoboxViewer)
         self.bild_1.setObjectName(u"bild_1")
-        self.bild_1.setGeometry(QRect(54, 574, 222, 148))
         self.bild_1.setPixmap(QPixmap(u":/Stock/data/222x148.png"))
-        self.bild_6 = QLabel(FotoboxViewer)
-        self.bild_6.setObjectName(u"bild_6")
-        self.bild_6.setGeometry(QRect(282, 730, 222, 148))
-        self.bild_6.setPixmap(QPixmap(u":/Stock/data/222x148.png"))
-        self.bild_4 = QLabel(FotoboxViewer)
-        self.bild_4.setObjectName(u"bild_4")
-        self.bild_4.setGeometry(QRect(738, 574, 222, 148))
-        self.bild_4.setPixmap(QPixmap(u":/Stock/data/222x148.png"))
+        self.bild_1.setAlignment(Qt.AlignCenter)
+
+        self.horizontalLayout_2.addWidget(self.bild_1)
+
+        self.bild_2 = QLabel(FotoboxViewer)
+        self.bild_2.setObjectName(u"bild_2")
+        self.bild_2.setPixmap(QPixmap(u":/Stock/data/222x148.png"))
+        self.bild_2.setAlignment(Qt.AlignCenter)
+
+        self.horizontalLayout_2.addWidget(self.bild_2)
+
         self.bild_3 = QLabel(FotoboxViewer)
         self.bild_3.setObjectName(u"bild_3")
-        self.bild_3.setGeometry(QRect(510, 574, 222, 148))
         self.bild_3.setPixmap(QPixmap(u":/Stock/data/222x148.png"))
+        self.bild_3.setAlignment(Qt.AlignCenter)
+
+        self.horizontalLayout_2.addWidget(self.bild_3)
+
+        self.bild_4 = QLabel(FotoboxViewer)
+        self.bild_4.setObjectName(u"bild_4")
+        self.bild_4.setPixmap(QPixmap(u":/Stock/data/222x148.png"))
+        self.bild_4.setAlignment(Qt.AlignCenter)
+
+        self.horizontalLayout_2.addWidget(self.bild_4)
+
+        self.horizontalSpacer_4 = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+
+        self.horizontalLayout_2.addItem(self.horizontalSpacer_4)
+
+
+        self.verticalLayout_2.addLayout(self.horizontalLayout_2)
+
+        self.verticalSpacer_8 = QSpacerItem(20, 15, QSizePolicy.Minimum, QSizePolicy.Fixed)
+
+        self.verticalLayout_2.addItem(self.verticalSpacer_8)
+
+        self.horizontalLayout_3 = QHBoxLayout()
+        self.horizontalLayout_3.setSpacing(25)
+        self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
+        self.horizontalSpacer_6 = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+
+        self.horizontalLayout_3.addItem(self.horizontalSpacer_6)
+
+        self.bild_5 = QLabel(FotoboxViewer)
+        self.bild_5.setObjectName(u"bild_5")
+        self.bild_5.setPixmap(QPixmap(u":/Stock/data/222x148.png"))
+        self.bild_5.setAlignment(Qt.AlignCenter)
+
+        self.horizontalLayout_3.addWidget(self.bild_5)
+
+        self.bild_6 = QLabel(FotoboxViewer)
+        self.bild_6.setObjectName(u"bild_6")
+        self.bild_6.setPixmap(QPixmap(u":/Stock/data/222x148.png"))
+        self.bild_6.setAlignment(Qt.AlignCenter)
+
+        self.horizontalLayout_3.addWidget(self.bild_6)
+
         self.bild_7 = QLabel(FotoboxViewer)
         self.bild_7.setObjectName(u"bild_7")
-        self.bild_7.setGeometry(QRect(510, 730, 222, 148))
         self.bild_7.setPixmap(QPixmap(u":/Stock/data/222x148.png"))
-        self.hintergrund = QFrame(FotoboxViewer)
-        self.hintergrund.setObjectName(u"hintergrund")
-        self.hintergrund.setGeometry(QRect(880, 320, 120, 80))
-        self.hintergrund.setStyleSheet(u"background-color: rgb(50, 50, 50);")
-        self.hintergrund.setFrameShape(QFrame.StyledPanel)
-        self.hintergrund.setFrameShadow(QFrame.Raised)
-        self.logo_ffwprosdorf = QLabel(FotoboxViewer)
-        self.logo_ffwprosdorf.setObjectName(u"logo_ffwprosdorf")
-        self.logo_ffwprosdorf.setGeometry(QRect(20, 20, 140, 178))
-        self.logo_ffwprosdorf.setPixmap(QPixmap(u":/Stock/data/Wappen_FFW-Prosdorf.png"))
-        self.logo_ffwprosdorf.setAlignment(Qt.AlignCenter)
-        self.logo_3ddruck = QLabel(FotoboxViewer)
-        self.logo_3ddruck.setObjectName(u"logo_3ddruck")
-        self.logo_3ddruck.setGeometry(QRect(920, 20, 175, 109))
-        self.logo_3ddruck.setPixmap(QPixmap(u":/Stock/data/Logo.png"))
-        self.logo_3ddruck.setAlignment(Qt.AlignCenter)
-        self.hintergrund.raise_()
-        self.bild_Gross.raise_()
-        self.bild_2.raise_()
-        self.bild_8.raise_()
-        self.bild_5.raise_()
-        self.bild_1.raise_()
-        self.bild_6.raise_()
-        self.bild_4.raise_()
-        self.bild_3.raise_()
-        self.bild_7.raise_()
-        self.logo_ffwprosdorf.raise_()
-        self.logo_3ddruck.raise_()
+        self.bild_7.setAlignment(Qt.AlignCenter)
+
+        self.horizontalLayout_3.addWidget(self.bild_7)
+
+        self.bild_8 = QLabel(FotoboxViewer)
+        self.bild_8.setObjectName(u"bild_8")
+        self.bild_8.setPixmap(QPixmap(u":/Stock/data/222x148.png"))
+        self.bild_8.setAlignment(Qt.AlignCenter)
+
+        self.horizontalLayout_3.addWidget(self.bild_8)
+
+        self.horizontalSpacer_5 = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+
+        self.horizontalLayout_3.addItem(self.horizontalSpacer_5)
+
+
+        self.verticalLayout_2.addLayout(self.horizontalLayout_3)
+
+        self.verticalSpacer_7 = QSpacerItem(20, 15, QSizePolicy.Minimum, QSizePolicy.Minimum)
+
+        self.verticalLayout_2.addItem(self.verticalSpacer_7)
+
 
         self.retranslateUi(FotoboxViewer)
 
@@ -97,17 +206,17 @@ class Ui_FotoboxViewer(object):
     # setupUi
 
     def retranslateUi(self, FotoboxViewer):
-        FotoboxViewer.setWindowTitle(QCoreApplication.translate("FotoboxViewer", u"Frame", None))
+        FotoboxViewer.setWindowTitle(QCoreApplication.translate("FotoboxViewer", u"FotoboxViewer", None))
+        self.logo_links.setText("")
         self.bild_Gross.setText("")
-        self.bild_2.setText("")
-        self.bild_8.setText("")
-        self.bild_5.setText("")
+        self.logo_rechts.setText("")
         self.bild_1.setText("")
-        self.bild_6.setText("")
-        self.bild_4.setText("")
+        self.bild_2.setText("")
         self.bild_3.setText("")
+        self.bild_4.setText("")
+        self.bild_5.setText("")
+        self.bild_6.setText("")
         self.bild_7.setText("")
-        self.logo_ffwprosdorf.setText("")
-        self.logo_3ddruck.setText("")
+        self.bild_8.setText("")
     # retranslateUi
 
