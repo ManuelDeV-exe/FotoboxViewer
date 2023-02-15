@@ -2,25 +2,22 @@ import sys
 import os
 from cx_Freeze import setup, Executable
 
-# Build Optionen    
-packages = ["os", "sys", "PySide6", "PyQt6", "pathlib", "time", "screeninfo", "threading", "PIL", "keyboard", "signal", "configobj", "ftplib", "watchdog", "logging"]
-excludes = []
-include_files = ["data/", "config.cfg", "platforms/"]
+# ADD FILES
+files = ["platforms/", "data/", "config.cfg"]
+packages = [""]
 
-build_exe_options = dict(packages=packages, excludes=excludes, include_files=include_files)
+target = Executable(
+    script="FotoboxViewer.py",
+    base="Win32GUI",
+    icon="data/favicon.ico"
+)
 
-# Ziel
-base = None
-if sys.platform == "win32":
-    base = "Win32GUI"
-
-target = Executable(script="FotoboxViewer.py", base=base, icon="data/favicon.ico")
-
-# Setup CX Freez
-setup( 
-    name = "FotoboxViewer",
-    version = "1.1",
-    description = "FotoboxViewer",
-    options = {'build_exe' : build_exe_options},
-    executables = [target]
-    )
+# SETUP CX FREEZE
+setup(
+    name="FotoboxViewer",
+    version="1.2.0",
+    description="",
+    author="Buecherl M.",
+    options={'build_exe': {'include_files': files}},
+    executables=[target]
+)

@@ -1,9 +1,5 @@
-import shutil
 import sys, os
-import time
-from tkinter.tix import IMAGE
 from turtle import pd
-import PyQt6, PySide6
 import pathlib
 from screeninfo import get_monitors
 import PySide6.QtCore as QtCore
@@ -11,15 +7,12 @@ import threading
 import keyboard
 import signal
 import ftplib
-import logging
+import glob
 
 import myconfig
 from PySide6.QtGui import *
 from PySide6.QtWidgets import *
-import PIL
 from PIL import Image
-from watchdog.observers import Observer
-from watchdog.events import FileSystemEventHandler
 
 logo_Pfad = str(pathlib.Path('data\\icon.png').absolute())
 global windowIcon # Define Var vor icon
@@ -60,123 +53,74 @@ class MainWindow(QFrame):
         pixmap_logo_links = QPixmap("data/logo_links.png")
         pixmap_logo_links = pixmap_logo_links.scaledToWidth(monitor_info['width']*prozent_werbung, mode=QtCore.Qt.TransformationMode.SmoothTransformation)
         self.ui.logo_links.setPixmap(pixmap_logo_links)
+        self.ui.logo_links.mousePressEvent = self.kill_all
 
         pixmap_logo_rechts = QPixmap("data/logo_rechts.png")
         pixmap_logo_rechts = pixmap_logo_rechts.scaledToWidth(monitor_info['width']*prozent_werbung, mode=QtCore.Qt.TransformationMode.SmoothTransformation)
         self.ui.logo_rechts.setPixmap(pixmap_logo_rechts)
 
-        self.ui.bild_Gross.setVisible(False)
-        self.ui.bild_1.setVisible(False)
-        self.ui.bild_2.setVisible(False)
-        self.ui.bild_3.setVisible(False)
-        self.ui.bild_4.setVisible(False)
-        self.ui.bild_5.setVisible(False)
-        self.ui.bild_6.setVisible(False)
-        self.ui.bild_7.setVisible(False)
-        self.ui.bild_8.setVisible(False)
+        self.setStyleSheet(f'background-image: url(:/BG/data/{tressor_data["bg"]}.jpg);')
 
+    def kill_all(self, event):
+        print('kill all')
+        PID = os.getpid()
+        os.kill(PID, signal.SIGTERM)
+               
 def change_big_images(last_image_names):
-    aktueller_pfad = tressor_data["bilder_pfad"] + "\\" + last_image_names[len(last_image_names)-1]
+    aktueller_pfad = last_image_names[len(last_image_names)-1]
 
     pixmap = QPixmap(aktueller_pfad)
-    pixmap = pixmap.scaledToHeight(monitor_info["heigth"] * prozent_grosses_bild, mode=QtCore.Qt.TransformationMode.SmoothTransformation)
+
+    pixmap = pixmap.scaledToHeight(int(monitor_info["heigth"] * prozent_grosses_bild), mode=QtCore.Qt.TransformationMode.SmoothTransformation)
+    
     MainWindow.ui.bild_Gross.setPixmap(pixmap)
-
-    MainWindow.ui.bild_Gross.setVisible(True)
-
+    
 def change_little_iamges(last_image_names):
-    for i in range(len(last_image_names)):
-        aktueller_pfad = tressor_data["bilder_pfad"] + "\\" + last_image_names[len(last_image_names)-1-i]
-        
+    for i, element in enumerate(last_image_names):
+        aktueller_pfad = element
+
         pixmap = QPixmap(aktueller_pfad)
-        pixmap = pixmap.scaledToHeight(monitor_info["heigth"] * prozent_kleines_bild, mode=QtCore.Qt.TransformationMode.SmoothTransformation)
+        pixmap = pixmap.scaledToHeight(int(monitor_info["heigth"] * prozent_kleines_bild), mode=QtCore.Qt.TransformationMode.SmoothTransformation)
 
-
-        if i == 1 : 
+        x = len(last_image_names)-i
+        if x == 1 : 
             MainWindow.ui.bild_1.setPixmap(pixmap)
-            MainWindow.ui.bild_1.setVisible(True)
-        if i == 2 :
+        elif x == 2 : 
             MainWindow.ui.bild_2.setPixmap(pixmap)
-            MainWindow.ui.bild_2.setVisible(True)
-        if i == 3 : 
+        elif x == 3 :  
             MainWindow.ui.bild_3.setPixmap(pixmap)
-            MainWindow.ui.bild_3.setVisible(True)
-        if i == 4 : 
+        elif x == 4 :  
             MainWindow.ui.bild_4.setPixmap(pixmap)
-            MainWindow.ui.bild_4.setVisible(True)
-        if i == 5 : 
-            MainWindow.ui.bild_5.setPixmap(pixmap)
-            MainWindow.ui.bild_5.setVisible(True)
-        if i == 6 : 
-            MainWindow.ui.bild_6.setPixmap(pixmap)
-            MainWindow.ui.bild_6.setVisible(True)
-        if i == 7 : 
-            MainWindow.ui.bild_7.setPixmap(pixmap)
-            MainWindow.ui.bild_7.setVisible(True)
-        if i == 8 : 
-            MainWindow.ui.bild_8.setPixmap(pixmap)
-            MainWindow.ui.bild_8.setVisible(True)
 
 
 def get_files_in_folder():
-    pfad = []
-    images = os.listdir(tressor_data["bilder_pfad"])
-    for i in range(len(images)):
-        if images[i].endswith(".JPG") or images[i].endswith(".jpg"):
-            pfad.append(images[i])
-    return pfad[-9:]
+    files = glob.glob(tressor_data["bilder_pfad"] + r'\\*.jpg')
+    files = sorted(files, key=os.path.getctime)
+    return files[-6:]
           
+def aktuaB(last_image_names):
+    try:
+        change_big_images(last_image_names)
+    except:print(Exception)
+    try:
+        change_little_iamges(last_image_names[-6:-1])
+    except:print(Exception)
+
 def aktuallisiere_bilder():
     while True:
-        last_image_names = []
         last_image_names = get_files_in_folder()
 
-        try:change_big_images(last_image_names)
-        except:print("Keine Bilder gefunden")
+        aktB = threading.Thread(target=aktuaB, args=(last_image_names,), name='aktuB')
+        aktB.start()
 
-        try:change_little_iamges(last_image_names)
-        except:print("Keine Bilder gefunden")
+        while aktB.is_alive():
+            QApplication.processEvents()
 
-        time.sleep(3)
 
-def keywatcher():
-    while True:
-        if keyboard.is_pressed('q'):
-            print('kill all')
-            PID = os.getpid()
-            os.kill(PID, signal.SIGTERM)
+def ftp_upload(file_path):
 
-def rename_copy_upload_log(dateipfad, dateiname):
-        if os.path.exists(tressor_data["bilder_pfad"] +  "\\ftp_upload") ==False:
-                os.makedirs(tressor_data["bilder_pfad"] +  "\\"  + "ftp_upload")
-
-        old_path = dateipfad
-        _,_, images = next(os.walk(tressor_data["bilder_pfad"] +  "\\"  + "ftp_upload"))
-        count = []
-        for j in range(len(images)):
-            if images[j].endswith(".jpg") or images[j].endswith(".JPG"):
-                count.append(j)
-            
-        new_path = f"{tressor_data['bilder_pfad']}\\ftp_upload\\{tressor_data['galerie']}_{str(len(count))}.jpg"
-
-        ftp_image_name = tressor_data["galerie"] + "_" + str(len(count)) + ".jpg"
-        try:
-            ftp_upload(old_path, new_path, ftp_image_name)
-            logging.info(f"Upload abgeschlossen -> {ftp_image_name}")
-            print(f"Upload abgeschlossen -> {ftp_image_name}")
-            log_upload(dateiname)
-        except:
-            logging.warning(f"Fehler beim upload -> {dateipfad}")
-            print(f"Fehler beim upload -> {dateipfad}")
-
-def img_comp(old_path, file_path):
-    img = Image.open(old_path)
-    img.save(file_path, optimize=True, quality=50)
-    time.sleep(0.5)
-
-def ftp_upload(old_path, file_path, filename):
-
-    img_comp(old_path, file_path)
+    filename = file_path.split('\\')
+    filename = filename[len(filename)-1]
 
     ftp = ftplib.FTP(tressor_data["ftp_host"])
     ftp.login(tressor_data["ftp_user"],tressor_data["ftp_password"])
@@ -187,11 +131,9 @@ def ftp_upload(old_path, file_path, filename):
         ftp.mkd("autoimport/" + tressor_data["galerie"])
         ftp.cwd("autoimport/" + tressor_data["galerie"])
 
-    new_file_path = str(pathlib.Path(file_path).absolute())
-    myfile = open(new_file_path, 'rb')
+    myfile = open(file_path, 'rb')
 
-    logging.info(f"Upload start -> {filename}")
-    print(f"Upload start -> {filename}")
+    print(f"Upload start -> {file_path}")
 
     ftp.storbinary('STOR ' + filename, myfile)
     ftp.quit()
@@ -220,29 +162,53 @@ def log_upload(file_upload):
 
     config_file.close()
 
-def watch_folder():
+def upload_images_from_folder():
     while True:
-        pfad = []
-        backup_nach_upload = tressor_data["bilder_pfad"] + "/backup"
-        images = os.listdir(tressor_data["bilder_pfad"])
-        for i in range(len(images)):
-            if images[i].endswith(".JPG") or images[i].endswith(".jpg"):
-                pfad.append(images[i])
+        pfad = glob.glob(tressor_data["bilder_pfad"] + r'\compressed\\*.jpg')
+        pfad = sorted(pfad, key=os.path.getctime)
 
-        for k in range(len(pfad)):
+        for img_path in pfad:
             bereits_hochgeladen = read_upload_log()
-
-            res = any(pfad[k] in string for string in bereits_hochgeladen)
+            res = any(img_path in string for string in bereits_hochgeladen)
             if res == False:
-                rename_copy_upload_log(dateipfad=tressor_data["bilder_pfad"] + "\\" + pfad[k], dateiname=pfad[k])
+                upload_log(dateipfad=img_path)
 
+def upload_log(dateipfad):
         try:
-            res = pfad[:-9]
-            for j in range(len(res)):
-                if os.path.exists(backup_nach_upload)==False:os.makedirs(backup_nach_upload)
-                shutil.move(tressor_data["bilder_pfad"] + "\\" + pfad[j], backup_nach_upload)
+            ftp_upload(dateipfad)
+            print(f"Upload abgeschlossen -> {dateipfad}")
+            log_upload(dateipfad)
         except:
-            pass
+            print(f"Fehler beim upload -> {dateipfad}")
+
+
+def save_folder_ueberwachen():
+    while True:
+        files = glob.glob(tressor_data["bilder_pfad"] + '/*.jpg')
+        files = sorted(files, key=os.path.getctime)
+        if len(files) <= 5: continue
+        
+        count = glob.glob(tressor_data["bilder_pfad"] + r'\original' + '/*.jpg')
+
+        img_compress(files[0], tressor_data["bilder_pfad"] + r'\compressed\\', count)
+        img_move(files[0], tressor_data["bilder_pfad"] + r'\original\\', count)
+
+def img_move(origin_path, new_path, count):
+    os.rename(origin_path, new_path + r'IMG_' + str(len(count)+1).zfill(4) + '.JPG')
+    print(origin_path + "  --->  " + new_path + r'IMG_' + str(len(count)+1).zfill(4) + '.JPG')
+
+def img_compress(old_path, new_path, count):
+    img = Image.open(str(old_path))
+
+    b = img.width
+    h = img.height
+
+    faktor = int(tressor_data['max_bild_breite']) / b
+    b = int(tressor_data['max_bild_breite'])
+    h = h * faktor
+
+    img = img.resize((int(b), int(h)), Image.Resampling.LANCZOS)
+    img.save(new_path + 'IMG_' + str(len(count)+1).zfill(4) + '.JPG', optimize=True, quality=80)
 
 if __name__ == '__main__':
 
@@ -250,6 +216,12 @@ if __name__ == '__main__':
 
     if os.path.exists(tressor_data["bilder_pfad"]) == False:
         os.makedirs(tressor_data["bilder_pfad"])
+    if os.path.exists(tressor_data["bilder_pfad"] + r'\original') == False:
+        os.makedirs(tressor_data["bilder_pfad"] + r'\original')
+    if os.path.exists(tressor_data["bilder_pfad"] + r'\ftp_upload') == False:
+        os.makedirs(tressor_data["bilder_pfad"] + r'\ftp_upload')
+    if os.path.exists(tressor_data["bilder_pfad"] + r'\compressed') == False:
+        os.makedirs(tressor_data["bilder_pfad"] + r'\compressed')
 
     config_path = f"{tressor_data['bilder_pfad']}/upload_log.cfg"
     if os.path.exists(config_path) == False:
@@ -257,21 +229,18 @@ if __name__ == '__main__':
         f.close()
     
     # Code
-
-    logging.basicConfig(filename=tressor_data["bilder_pfad"] + '/log.log', encoding='utf-8', level=logging.INFO)
-
-    t1 = threading.Thread(target=aktuallisiere_bilder, args=(), name="Bilder Aktualisieren")
-    t2 = threading.Thread(target=keywatcher, args=(), name="Colse watcher")
-    t3 = threading.Thread(target=watch_folder, args=(), name="Monitor Folder")
-
     app = QApplication(sys.argv)
     windowIcon = QIcon(str(logo_Pfad)) # Define Window Icon
 
     MainWindow = MainWindow()
 
-    t1.start()
-    t2.start()
-    t3.start()
+    mainFolderObserver = threading.Thread(target=save_folder_ueberwachen, args=(), name="MainFolderWatcher")
+    bilderAktuallisieren = threading.Thread(target=aktuallisiere_bilder, args=(), name="Bilder Aktualisieren")
+    ftpUpload = threading.Thread(target=upload_images_from_folder, args=(), name="Monitor Folder")
+
+    mainFolderObserver.start() # ordner überwachen und bilder compriemierun und sotieren
+    bilderAktuallisieren.start() # aktuelle bilder anzeigen in der Fotobox
+    ftpUpload.start() # Upload images
 
     MainWindow.show()
     sys.exit(app.exec()) # alles beenden

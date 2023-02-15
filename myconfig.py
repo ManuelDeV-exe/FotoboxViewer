@@ -20,6 +20,8 @@ def read_config():
     tressor_data["prozent_grosses_bild"] = config_file["Einstellungen"]["prozent_grosses_bild"]
     tressor_data["prozent_kleines_bild"] = config_file["Einstellungen"]["prozent_kleines_bild"]
     tressor_data["prozent_werbung"] = config_file["Einstellungen"]["prozent_werbung"]
+    tressor_data["max_bild_breite"] = config_file["Einstellungen"]["max_bild_breite"]
+    tressor_data["bg"] = config_file["Einstellungen"]["bg"]
 
     return tressor_data
 
@@ -41,4 +43,5 @@ def create_config():
     config_file["prozent_grosses_bild"] = ""
     config_file["prozent_kleines_bild"] = ""
     config_file["prozent_werbung"] = ""
+    config_file["bg"] = "BG_1"
     config_file.write()

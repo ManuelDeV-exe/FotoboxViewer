@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Fotobox_Viewer"
-#define MyAppVersion "1.1"
+#define MyAppVersion "1.1.1"
 #define MyAppPublisher "3ddruck-mb.de"
 #define MyAppURL "https://www.3ddruck-mb.de"
 #define MyAppExeName "FotoboxViewer.exe"
@@ -34,7 +34,7 @@ SetupIconFile=P:\Python\FotoboxViewer\FotoboxViewer\data\favicon.ico
 Compression=lzma
 SolidCompression=yes
 WizardStyle=modern
-
+       
 [Languages]
 Name: "german"; MessagesFile: "compiler:Languages\German.isl"
 

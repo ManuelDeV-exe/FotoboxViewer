@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'Window.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.3.1
+## Created by: Qt User Interface Compiler version 6.4.1
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -23,8 +23,8 @@ class Ui_FotoboxViewer(object):
     def setupUi(self, FotoboxViewer):
         if not FotoboxViewer.objectName():
             FotoboxViewer.setObjectName(u"FotoboxViewer")
-        FotoboxViewer.resize(1508, 971)
-        FotoboxViewer.setStyleSheet(u"background-color: rgb(125, 125, 125);")
+        FotoboxViewer.resize(1508, 963)
+        FotoboxViewer.setStyleSheet(u"background-image: url(:/BG/data/BG_1.jpg);")
         self.verticalLayout_2 = QVBoxLayout(FotoboxViewer)
         self.verticalLayout_2.setObjectName(u"verticalLayout_2")
         self.verticalSpacer_4 = QSpacerItem(20, 15, QSizePolicy.Minimum, QSizePolicy.Minimum)
@@ -64,6 +64,7 @@ class Ui_FotoboxViewer(object):
         self.bild_Gross = QLabel(FotoboxViewer)
         self.bild_Gross.setObjectName(u"bild_Gross")
         self.bild_Gross.setEnabled(True)
+        self.bild_Gross.setMinimumSize(QSize(780, 520))
         self.bild_Gross.setStyleSheet(u"")
         self.bild_Gross.setPixmap(QPixmap(u":/Stock/data/780x520.png"))
         self.bild_Gross.setScaledContents(False)
@@ -160,34 +161,6 @@ class Ui_FotoboxViewer(object):
 
         self.horizontalLayout_3.addItem(self.horizontalSpacer_6)
 
-        self.bild_5 = QLabel(FotoboxViewer)
-        self.bild_5.setObjectName(u"bild_5")
-        self.bild_5.setPixmap(QPixmap(u":/Stock/data/222x148.png"))
-        self.bild_5.setAlignment(Qt.AlignCenter)
-
-        self.horizontalLayout_3.addWidget(self.bild_5)
-
-        self.bild_6 = QLabel(FotoboxViewer)
-        self.bild_6.setObjectName(u"bild_6")
-        self.bild_6.setPixmap(QPixmap(u":/Stock/data/222x148.png"))
-        self.bild_6.setAlignment(Qt.AlignCenter)
-
-        self.horizontalLayout_3.addWidget(self.bild_6)
-
-        self.bild_7 = QLabel(FotoboxViewer)
-        self.bild_7.setObjectName(u"bild_7")
-        self.bild_7.setPixmap(QPixmap(u":/Stock/data/222x148.png"))
-        self.bild_7.setAlignment(Qt.AlignCenter)
-
-        self.horizontalLayout_3.addWidget(self.bild_7)
-
-        self.bild_8 = QLabel(FotoboxViewer)
-        self.bild_8.setObjectName(u"bild_8")
-        self.bild_8.setPixmap(QPixmap(u":/Stock/data/222x148.png"))
-        self.bild_8.setAlignment(Qt.AlignCenter)
-
-        self.horizontalLayout_3.addWidget(self.bild_8)
-
         self.horizontalSpacer_5 = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
 
         self.horizontalLayout_3.addItem(self.horizontalSpacer_5)
@@ -214,9 +187,5 @@ class Ui_FotoboxViewer(object):
         self.bild_2.setText("")
         self.bild_3.setText("")
         self.bild_4.setText("")
-        self.bild_5.setText("")
-        self.bild_6.setText("")
-        self.bild_7.setText("")
-        self.bild_8.setText("")
     # retranslateUi
 
