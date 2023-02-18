@@ -95,7 +95,7 @@ def change_little_iamges(last_image_names):
 
 def get_files_in_folder():
     files = glob.glob(tressor_data["bilder_pfad"] + r'\\*.jpg')
-    files = sorted(files, key=os.path.getctime)
+    files = sorted(files, key=os.path.getmtime)
     return files[-6:]
           
 def aktuaB(last_image_names):
@@ -138,9 +138,9 @@ def ftp_upload(file_path):
     ftp.storbinary('STOR ' + filename, myfile)
     ftp.quit()
 
-def read_upload_log():
+def read_upload_log(cfg_file_name):
     aktuelle_upload_liste = ()
-    config_path = f"{tressor_data['bilder_pfad']}/upload_log.cfg"
+    config_path = f"{tressor_data['bilder_pfad']}{cfg_file_name}"
     config_file = open(config_path, 'r')
 
     aktuelle_upload_liste = config_file.readlines()
@@ -149,7 +149,7 @@ def read_upload_log():
     return aktuelle_upload_liste
 
 def log_upload(file_upload):
-    aktuelle_upload_liste = read_upload_log()
+    aktuelle_upload_liste = read_upload_log(r'/upload_log.cfg')
     aktuelle_upload_liste.append(file_upload)
 
     config_path = f"{tressor_data['bilder_pfad']}/upload_log.cfg"
@@ -168,7 +168,7 @@ def upload_images_from_folder():
         pfad = sorted(pfad, key=os.path.getctime)
 
         for img_path in pfad:
-            bereits_hochgeladen = read_upload_log()
+            bereits_hochgeladen = read_upload_log(r'/upload_log.cfg')
             res = any(img_path in string for string in bereits_hochgeladen)
             if res == False:
                 upload_log(dateipfad=img_path)
@@ -185,13 +185,43 @@ def upload_log(dateipfad):
 def save_folder_ueberwachen():
     while True:
         files = glob.glob(tressor_data["bilder_pfad"] + '/*.jpg')
-        files = sorted(files, key=os.path.getctime)
-        if len(files) <= 5: continue
-        
-        count = glob.glob(tressor_data["bilder_pfad"] + r'\original' + '/*.jpg')
+        files = sorted(files, key=os.path.getmtime)
 
-        img_compress(files[0], tressor_data["bilder_pfad"] + r'\compressed\\', count)
-        img_move(files[0], tressor_data["bilder_pfad"] + r'\original\\', count)
+        if len(files) <= 5: 
+            for element in files:
+                count = glob.glob(tressor_data["bilder_pfad"] + r'\compressed' + '/*.jpg')
+                res = check_if_compressed(element)
+                if res == 0:
+                    img_compress(element, tressor_data["bilder_pfad"] + r'\compressed\\', count)
+        else:
+            res = check_if_compressed(files[0])
+            if res == 0:
+                count = glob.glob(tressor_data["bilder_pfad"] + r'\compressed' + '/*.jpg')
+                img_compress(files[0], tressor_data["bilder_pfad"] + r'\compressed\\', count)
+            
+            count = glob.glob(tressor_data["bilder_pfad"] + r'\original' + '/*.jpg')
+            img_move(files[0], tressor_data["bilder_pfad"] + r'\original\\', count)
+
+def check_if_compressed(path_file):
+    bereits_umgewandelt = read_upload_log(r'/compressed_log.cfg')
+    for zeile in bereits_umgewandelt:
+        if path_file in zeile:
+            return 1
+    return 0
+
+def log_compressed(path_file):
+    aktuelle_upload_liste = read_upload_log(r'/compressed_log.cfg')
+    aktuelle_upload_liste.append(path_file)
+
+    config_path = f"{tressor_data['bilder_pfad']}/compressed_log.cfg"
+    config_file = open(config_path, "w+")
+
+    for i in range(len(aktuelle_upload_liste)):
+        if aktuelle_upload_liste[i].endswith("\n")==False:
+            aktuelle_upload_liste[i] = aktuelle_upload_liste[i] + "\n"
+        config_file.writelines(aktuelle_upload_liste[i])
+
+    config_file.close()
 
 def img_move(origin_path, new_path, count):
     os.rename(origin_path, new_path + r'IMG_' + str(len(count)+1).zfill(4) + '.JPG')
@@ -210,6 +240,8 @@ def img_compress(old_path, new_path, count):
     img = img.resize((int(b), int(h)), Image.Resampling.LANCZOS)
     img.save(new_path + 'IMG_' + str(len(count)+1).zfill(4) + '.JPG', optimize=True, quality=80)
 
+    log_compressed(old_path)
+
 if __name__ == '__main__':
 
     # Pfade überprüfen
@@ -226,6 +258,9 @@ if __name__ == '__main__':
     config_path = f"{tressor_data['bilder_pfad']}/upload_log.cfg"
     if os.path.exists(config_path) == False:
         f=open(config_path, 'w+')
+        f.close()
+    if os.path.exists(f"{tressor_data['bilder_pfad']}/compressed_log.cfg") == False:
+        f=open(f"{tressor_data['bilder_pfad']}/compressed_log.cfg", 'w+')
         f.close()
     
     # Code
