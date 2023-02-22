@@ -15,7 +15,7 @@ target = Executable(
 # SETUP CX FREEZE
 setup(
     name="FotoboxViewer",
-    version="1.2.0",
+    version="1.2.1",
     description="",
     author="Buecherl M.",
     options={'build_exe': {'include_files': files}},

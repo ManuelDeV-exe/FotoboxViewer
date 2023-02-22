@@ -1,13 +1,12 @@
 import sys, os
-from turtle import pd
 import pathlib
 from screeninfo import get_monitors
 import PySide6.QtCore as QtCore
 import threading
-import keyboard
 import signal
 import ftplib
 import glob
+import time
 
 import myconfig
 from PySide6.QtGui import *
@@ -37,19 +36,18 @@ for m in get_monitors():
     monitor_info['heigth'] = m.width
 
 from ui_Window import Ui_FotoboxViewer
+from ui_Loading_screen import Ui_Loading_screen
 
 class MainWindow(QFrame):
     def __init__(self):
         super(MainWindow, self).__init__()
         self.ui = Ui_FotoboxViewer()
         self.ui.setupUi(self)
-        # self.setWindowIcon(windowIcon)
+        self.setWindowIcon(windowIcon)
 
         self.setWindowFlag(QtCore.Qt.FramelessWindowHint , True)
 
         self.setGeometry(monitor_info['x'], monitor_info['y'], monitor_info['width'], monitor_info['heigth'])
-        self.showMaximized()
-
         pixmap_logo_links = QPixmap("data/logo_links.png")
         pixmap_logo_links = pixmap_logo_links.scaledToWidth(monitor_info['width']*prozent_werbung, mode=QtCore.Qt.TransformationMode.SmoothTransformation)
         self.ui.logo_links.setPixmap(pixmap_logo_links)
@@ -61,11 +59,57 @@ class MainWindow(QFrame):
 
         self.setStyleSheet(f'background-image: url(:/BG/data/{tressor_data["bg"]}.jpg);')
 
+        pixmap = QPixmap(r'data/780x520.png')
+        pixmap = pixmap.scaledToHeight(int(monitor_info["heigth"] * prozent_grosses_bild), mode=QtCore.Qt.TransformationMode.SmoothTransformation)
+        self.ui.bild_Gross.setPixmap(pixmap)
+
+        pixmap = QPixmap(r'data/222x148.png')
+        pixmap = pixmap.scaledToHeight(int(monitor_info["heigth"] * prozent_kleines_bild), mode=QtCore.Qt.TransformationMode.SmoothTransformation)
+        self.ui.bild_1.setPixmap(pixmap)
+
+        pixmap = QPixmap(r'data/222x148.png')
+        pixmap = pixmap.scaledToHeight(int(monitor_info["heigth"] * prozent_kleines_bild), mode=QtCore.Qt.TransformationMode.SmoothTransformation)
+        self.ui.bild_2.setPixmap(pixmap)
+
+        pixmap = QPixmap(r'data/222x148.png')
+        pixmap = pixmap.scaledToHeight(int(monitor_info["heigth"] * prozent_kleines_bild), mode=QtCore.Qt.TransformationMode.SmoothTransformation)
+        self.ui.bild_3.setPixmap(pixmap)
+
+        pixmap = QPixmap(r'data/222x148.png')
+        pixmap = pixmap.scaledToHeight(int(monitor_info["heigth"] * prozent_kleines_bild), mode=QtCore.Qt.TransformationMode.SmoothTransformation)
+        self.ui.bild_4.setPixmap(pixmap)
+
+        self.showMaximized()
+
     def kill_all(self, event):
         print('kill all')
         PID = os.getpid()
         os.kill(PID, signal.SIGTERM)
-               
+
+    def showEvent(self, event):
+        super().showEvent(event)
+        timewaste(6)
+        Loading_screen.close()
+
+class Loading_screen(QFrame):
+    def __init__(self):
+        super(Loading_screen, self).__init__()
+        self.ui = Ui_Loading_screen()
+        self.ui.setupUi(self)
+        windowIcon = QIcon(str(logo_Pfad)) # Define Window Icon
+        self.setWindowIcon(windowIcon)
+
+        self.setWindowFlag(QtCore.Qt.FramelessWindowHint , True)
+        self.setAttribute(QtCore.Qt.WA_TranslucentBackground)
+
+        animation = QMovie(r"data/loading.gif")
+        self.ui.Loading_screen_gif.setMovie(animation)
+        self.ui.Loading_screen_gif.setScaledContents(True)
+        animation.start()
+
+        self.show()
+
+
 def change_big_images(last_image_names):
     aktueller_pfad = last_image_names[len(last_image_names)-1]
 
@@ -73,7 +117,12 @@ def change_big_images(last_image_names):
 
     pixmap = pixmap.scaledToHeight(int(monitor_info["heigth"] * prozent_grosses_bild), mode=QtCore.Qt.TransformationMode.SmoothTransformation)
     
+    old_pixmap = MainWindow.ui.bild_1.pixmap()
     MainWindow.ui.bild_Gross.setPixmap(pixmap)
+
+    # Löschen Sie die alte QPixmap-Instanz, um den Cache freizugeben
+    if old_pixmap is not None:
+        del old_pixmap
     
 def change_little_iamges(last_image_names):
     for i, element in enumerate(last_image_names):
@@ -84,14 +133,21 @@ def change_little_iamges(last_image_names):
 
         x = len(last_image_names)-i
         if x == 1 : 
+            old_pixmap = MainWindow.ui.bild_1.pixmap()
             MainWindow.ui.bild_1.setPixmap(pixmap)
         elif x == 2 : 
+            old_pixmap = MainWindow.ui.bild_2.pixmap()
             MainWindow.ui.bild_2.setPixmap(pixmap)
         elif x == 3 :  
+            old_pixmap = MainWindow.ui.bild_3.pixmap()
             MainWindow.ui.bild_3.setPixmap(pixmap)
         elif x == 4 :  
+            old_pixmap = MainWindow.ui.bild_4.pixmap()
             MainWindow.ui.bild_4.setPixmap(pixmap)
 
+        # Löschen Sie die alte QPixmap-Instanz, um den Cache freizugeben
+        if old_pixmap is not None:
+            del old_pixmap
 
 def get_files_in_folder():
     files = glob.glob(tressor_data["bilder_pfad"] + r'\\*.jpg')
@@ -108,14 +164,17 @@ def aktuaB(last_image_names):
 
 def aktuallisiere_bilder():
     while True:
-        last_image_names = get_files_in_folder()
+        try:
+            last_image_names = get_files_in_folder()
 
-        aktB = threading.Thread(target=aktuaB, args=(last_image_names,), name='aktuB')
-        aktB.start()
+            aktB = threading.Thread(target=aktuaB, args=(last_image_names,), name='aktuB')
+            aktB.start()
 
-        while aktB.is_alive():
-            QApplication.processEvents()
-
+            while aktB.is_alive():
+                QApplication.processEvents()    
+        except:
+            print(Exception)
+            continue
 
 def ftp_upload(file_path):
 
@@ -184,23 +243,27 @@ def upload_log(dateipfad):
 
 def save_folder_ueberwachen():
     while True:
-        files = glob.glob(tressor_data["bilder_pfad"] + '/*.jpg')
-        files = sorted(files, key=os.path.getmtime)
+        try:
+            files = glob.glob(tressor_data["bilder_pfad"] + '/*.jpg')
+            files = sorted(files, key=os.path.getmtime)
 
-        if len(files) <= 5: 
-            for element in files:
-                count = glob.glob(tressor_data["bilder_pfad"] + r'\compressed' + '/*.jpg')
-                res = check_if_compressed(element)
+            if len(files) <= 5: 
+                for element in files:
+                    count = glob.glob(tressor_data["bilder_pfad"] + r'\compressed' + '/*.jpg')
+                    res = check_if_compressed(element)
+                    if res == 0:
+                        img_compress(element, tressor_data["bilder_pfad"] + r'\compressed\\', count)
+            else:
+                res = check_if_compressed(files[0])
                 if res == 0:
-                    img_compress(element, tressor_data["bilder_pfad"] + r'\compressed\\', count)
-        else:
-            res = check_if_compressed(files[0])
-            if res == 0:
-                count = glob.glob(tressor_data["bilder_pfad"] + r'\compressed' + '/*.jpg')
-                img_compress(files[0], tressor_data["bilder_pfad"] + r'\compressed\\', count)
-            
-            count = glob.glob(tressor_data["bilder_pfad"] + r'\original' + '/*.jpg')
-            img_move(files[0], tressor_data["bilder_pfad"] + r'\original\\', count)
+                    count = glob.glob(tressor_data["bilder_pfad"] + r'\compressed' + '/*.jpg')
+                    img_compress(files[0], tressor_data["bilder_pfad"] + r'\compressed\\', count)
+                
+                count = glob.glob(tressor_data["bilder_pfad"] + r'\original' + '/*.jpg')
+                img_move(files[0], tressor_data["bilder_pfad"] + r'\original\\', count)
+        except: 
+            print(Exception)
+            continue
 
 def check_if_compressed(path_file):
     bereits_umgewandelt = read_upload_log(r'/compressed_log.cfg')
@@ -242,7 +305,21 @@ def img_compress(old_path, new_path, count):
 
     log_compressed(old_path)
 
+def timewaste(sek):
+    timewaste = threading.Thread(target=lambda:time.sleep(sek))
+    timewaste.start()
+    while timewaste.is_alive():
+        QApplication.processEvents()
+
+def Mainwindow_Initieren(window):
+    MainWindow = window
+    return MainWindow
+
 if __name__ == '__main__':
+    app = QApplication(sys.argv)
+    windowIcon = QIcon(str(logo_Pfad)) # Define Window Icon
+
+    Loading_screen = Loading_screen()
 
     # Pfade überprüfen
 
@@ -263,10 +340,7 @@ if __name__ == '__main__':
         f=open(f"{tressor_data['bilder_pfad']}/compressed_log.cfg", 'w+')
         f.close()
     
-    # Code
-    app = QApplication(sys.argv)
-    windowIcon = QIcon(str(logo_Pfad)) # Define Window Icon
-
+    timewaste(4)
     MainWindow = MainWindow()
 
     mainFolderObserver = threading.Thread(target=save_folder_ueberwachen, args=(), name="MainFolderWatcher")
@@ -275,7 +349,7 @@ if __name__ == '__main__':
 
     mainFolderObserver.start() # ordner überwachen und bilder compriemierun und sotieren
     bilderAktuallisieren.start() # aktuelle bilder anzeigen in der Fotobox
-    ftpUpload.start() # Upload images
+    if tressor_data['upload'] == '1':
+        ftpUpload.start() # Upload images
 
-    MainWindow.show()
-    sys.exit(app.exec()) # alles beenden
+    sys.exit(app.exec())
