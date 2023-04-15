@@ -5,6 +5,7 @@ import time
 import subprocess
 import shutil
 from PIL import Image
+import psutil
 
 import reg_config
 myimages_schlüssel =('big_1', 'little_1', 'little_2', 'little_3', 'little_4')
@@ -59,7 +60,15 @@ class UiCore(QMainWindow):
         res = subprocess.Popen(MyPaths.config['viewer_path'])
 
         if True if MySettings.config['upload'] == "True" else False == True:
-            res = subprocess.Popen(MyPaths.config['upload_path'])
+            for proc in psutil.process_iter():
+                try:
+                    if proc.name() == "FTP-Upload.exe":
+                        print("Notepad läuft bereits")
+                        break
+                except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
+                    pass
+            else:
+                res = subprocess.Popen(MyPaths.config['upload_path'])
 
     def save(self):
         MyPaths.write('kamera_folder', self.ui.path_kamera_folder.text())
@@ -101,7 +110,7 @@ def watchfolder():
         if True if MySettings.config['upload'] == "True" else False == True:
             for file in files:
                 if read_upload_log(file) == True:
-                    moveFileupload = threading.Thread(target=move_to_upload, name='upload_folder', args=[file,], daemon=True)
+                    moveFileupload = threading.Thread(target=move_to_upload, name='upload_folder', args=[file,], daemon=False)
                     moveFileupload.start()
 
         if len(files) >= 6 and MyPaths.config['full_size_folder'] != "":
@@ -109,7 +118,7 @@ def watchfolder():
                 if moveFile.is_alive() or moveFileupload.is_alive():
                     continue
             except:pass
-            moveFile = threading.Thread(target=move_to_original, name=f'moveFile_{files[0]}', args=[files[0],], daemon=True)
+            moveFile = threading.Thread(target=move_to_original, name=f'moveFile_{files[0]}', args=[files[0],], daemon=False)
             moveFile.start()
 
         time.sleep(0.5)

@@ -12,95 +12,74 @@ MySettings = reg_config.My_Config('Settings', mysettings_schlüssel)
 
 from PySide6.QtGui import *
 from PySide6.QtWidgets import *
+from PySide6.QtWebEngineWidgets import *
 import PySide6.QtCore as QtCore
 
 monitor_size_width, monitor_size_heigth = 1920, 1080
 logo_Pfad = os.path.abspath('data/icon.png')
 
-prozent_werbung = float(MySettings.config['prozent_werbung'])
-prozent_grosses_bild = float(MySettings.config['prozent_grosses_bild'])
-prozent_kleines_bild = float(MySettings.config['prozent_kleines_bild'])
+hintergrundliste = ['data/BG_0.jpg','data/BG_1.jpg','data/BG_2.jpg','data/BG_3.jpg','data/BG_4.jpg','data/BG_5.jpg','data/BG_6.jpg']
 
 from ui_Window import Ui_FotoboxViewer
 
-class MainWindow(QFrame):
+class MainWindow(QWebEngineView):
     def __init__(self):
         super(MainWindow, self).__init__()
-        self.ui = Ui_FotoboxViewer()
-        self.ui.setupUi(self)
         self.setWindowIcon(QIcon(str(logo_Pfad)))
+        self.loadPage()
 
+        self.setContentsMargins(0,0,0,0)
         self.setWindowFlag(QtCore.Qt.FramelessWindowHint , True)
 
-        self.setGeometry(0, 0, monitor_size_width, monitor_size_heigth)
-        pixmap_logo_links = QPixmap("data/logo_links.png")
-        pixmap_logo_links = pixmap_logo_links.scaledToWidth(monitor_size_width*prozent_werbung, mode=QtCore.Qt.TransformationMode.SmoothTransformation)
-        self.ui.logo_links.setPixmap(pixmap_logo_links)
-        self.ui.logo_links.mousePressEvent = self.kill
-
-        pixmap_logo_rechts = QPixmap("data/logo_rechts.png")
-        pixmap_logo_rechts = pixmap_logo_rechts.scaledToWidth(monitor_size_width*prozent_werbung, mode=QtCore.Qt.TransformationMode.SmoothTransformation)
-        self.ui.logo_rechts.setPixmap(pixmap_logo_rechts)
-
-        bg = int(MySettings.config['background_img'])-1
-        self.setStyleSheet(f'background-image: url(:/BG/data/BG_{bg}.jpg);')
-
-        self.timer = QtCore.QTimer()
-        self.timer.timeout.connect(lambda: self.setTime())
-        self.timer.start(1000)
-
-        pixmap = QPixmap(r'data/780x520.png')
-        pixmap = pixmap.scaledToHeight(int(monitor_size_heigth * prozent_grosses_bild), mode=QtCore.Qt.TransformationMode.SmoothTransformation)
-        self.ui.bild_Gross.setPixmap(pixmap)
-
-        pixmap = QPixmap(r'data/222x148.png')
-        pixmap = pixmap.scaledToHeight(int(monitor_size_heigth * prozent_kleines_bild), mode=QtCore.Qt.TransformationMode.SmoothTransformation)
-        self.ui.bild_1.setPixmap(pixmap)
-
-        pixmap = QPixmap(r'data/222x148.png')
-        pixmap = pixmap.scaledToHeight(int(monitor_size_heigth * prozent_kleines_bild), mode=QtCore.Qt.TransformationMode.SmoothTransformation)
-        self.ui.bild_2.setPixmap(pixmap)
-
-        pixmap = QPixmap(r'data/222x148.png')
-        pixmap = pixmap.scaledToHeight(int(monitor_size_heigth * prozent_kleines_bild), mode=QtCore.Qt.TransformationMode.SmoothTransformation)
-        self.ui.bild_3.setPixmap(pixmap)
-
-        pixmap = QPixmap(r'data/222x148.png')
-        pixmap = pixmap.scaledToHeight(int(monitor_size_heigth * prozent_kleines_bild), mode=QtCore.Qt.TransformationMode.SmoothTransformation)
-        self.ui.bild_4.setPixmap(pixmap)
-
+        close_btn = QPushButton('', self)
+        close_btn.setStyleSheet("background-color: rgba(0,0,0,0);")
+        close_btn.setGeometry(0, 0, 500, 300)
+        close_btn.setCursor(QCursor(Qt.PointingHandCursor))
+        close_btn.clicked.connect(self.close)
+        
         self.showMaximized()
 
-    def setTime(self):
-        if os.path.exists(MyImages.config['big_1'])==True:
-            
-            pixmap = QPixmap(MyImages.config['big_1'])
+        self.timer = QtCore.QTimer()
+        self.timer.timeout.connect(lambda: self.reloadPage())
+        self.timer.start(500)
 
-            pixmap = pixmap.scaledToHeight(int(monitor_size_width * prozent_grosses_bild), mode=QtCore.Qt.TransformationMode.SmoothTransformation)
-            
-            # Löscht die alte QPixmap-Instanz, um den Cache freizugeben
-            old_pixmap = MainWindow.ui.bild_Gross.pixmap()
-            if old_pixmap is not None:
-                del old_pixmap
-            MainWindow.ui.bild_Gross.setPixmap(pixmap)    
+    def loadPage(self):
+        with open('index.html', 'r') as f:
+            html = f.read()
+            f.close()
 
-            liste = [MainWindow.ui.bild_1, MainWindow.ui.bild_2, MainWindow.ui.bild_3, MainWindow.ui.bild_4]
-            MyImages.read_new()
-            for i in range(4):
-                try:
-                    if os.path.exists(MyImages.config[f'little_{i+1}'])==False: continue
-                    mypixmap = QPixmap(MyImages.config[f'little_{i+1}'])
-                    mypixmap = mypixmap.scaledToHeight(int(monitor_size_width * prozent_kleines_bild), mode=QtCore.Qt.TransformationMode.SmoothTransformation)
-                    # Löschen Sie die alte QPixmap-Instanz, um den Cache freizugeben
-                    old_pixmap = liste[i].pixmap()
-                    if old_pixmap is not None:
-                        del old_pixmap
-                    liste[i].setPixmap(mypixmap)     
-                except Exception as ex: print(ex)
+        prozent_werbung = float(MySettings.config['prozent_werbung'])
+        prozent_grosses_bild = float(MySettings.config['prozent_grosses_bild'])
+        prozent_kleines_bild = float(MySettings.config['prozent_kleines_bild'])
+
+        html = html.replace('##logo_breite##', f'{prozent_werbung}%')
+        html = html.replace('##breite##', f'{monitor_size_width*prozent_werbung}px')
+        html = html.replace('##big_img_width##', f'{prozent_grosses_bild}%')
+        html = html.replace('##breite_small##', f'{prozent_kleines_bild}%')
+
+        html = html.replace('##werbung_links##', 'data/logo_links.png')
+        html = html.replace('##werbung_rechts##', 'data/logo_rechts.png')
+        html = html.replace('##big##', MyImages.config['big_1'])
+
+        bg = hintergrundliste[int(MySettings.config['background_img'])]
+        html = html.replace('##hintergrund_img##', bg)
+
+        html = html.replace('##img_1##', MyImages.config['little_1'])
+        html = html.replace('##img_2##', MyImages.config['little_2'])
+        html = html.replace('##img_3##', MyImages.config['little_3'])
+        html = html.replace('##img_4##', MyImages.config['little_4'])
         
-    def kill(self, event):
-        self.close()
-    
+        self.setHtml(html, QtCore.QUrl('file://'))
+
+    def reloadPage(self):
+        old_path = MyImages.config['big_1']
+        MySettings.read_new()
+        MyImages.read_new()
+        new_path = MyImages.config['big_1']
+        
+        if old_path != new_path:
+            self.loadPage()
+
 if __name__ == '__main__':
 
     app = QApplication(sys.argv)

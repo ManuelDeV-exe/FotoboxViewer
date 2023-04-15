@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+        body {
+            position: absolute;
+            left: 0;
+            right: 0;
+            width: 100vw;
+            height: 100vh;
+            text-align: center;
+            margin: 0;
+            background-image: url(##hintergrund_img##);
+            background-size: cover;
+            background-position: top;
+        }
+
+        .logo {
+            width: ##logo_breite##;
+            height: auto;
+        }
+        #logo_rechts {
+            position: absolute;
+            left: 45px;
+            top: 45px;
+        }
+        #logo_links {
+            position: absolute;
+            right: 45px;
+            top: 45px;
+        }
+
+        #big_img {
+            position: absolute;
+            width: ##big_img_width##;
+            top: 55px;
+            transform: translateX(-50%);
+            left: 50vw;
+        }
+
+        #box {
+            position: absolute;
+            bottom: 35px;
+            display: flex;
+            justify-content: space-around;
+            width: 90vw;
+            transform: translateX(-50%);
+            left: 50%;
+        }
+
+        .img_small {
+            width: ##breite_small##;
+        }
+
+    </style>
+</head>
+<body>
+    <img id="logo_links" class="logo" src="##werbung_links##" alt="">
+    <img id="logo_rechts" class="logo" src="##werbung_rechts##" alt="">
+
+    <img id="big_img" src="##big##" alt=""></div>
+
+    <div id="box">
+        <img id="img_1" class="img_small" src="##img_1##" alt="">
+        <img id="img_2" class="img_small" src="##img_2##" alt="">
+        <img id="img_3" class="img_small" src="##img_3##" alt="">
+        <img id="img_4" class="img_small" src="##img_4##" alt="">
+    </div>
+
+</body>
+</html>
