@@ -24,9 +24,9 @@ class Ui_Core(object):
     def setupUi(self, Core):
         if not Core.objectName():
             Core.setObjectName(u"Core")
-        Core.resize(560, 320)
-        Core.setMinimumSize(QSize(560, 320))
-        Core.setMaximumSize(QSize(560, 320))
+        Core.resize(560, 340)
+        Core.setMinimumSize(QSize(560, 340))
+        Core.setMaximumSize(QSize(560, 340))
         icon = QIcon()
         icon.addFile(u":/Stock/data/icon.png", QSize(), QIcon.Normal, QIcon.Off)
         Core.setWindowIcon(icon)
@@ -115,6 +115,10 @@ class Ui_Core(object):
         self.stop_BTN = QPushButton(self.centralwidget)
         self.stop_BTN.setObjectName(u"stop_BTN")
         self.stop_BTN.setGeometry(QRect(330, 290, 46, 24))
+        self.label_12 = QLabel(self.centralwidget)
+        self.label_12.setObjectName(u"label_12")
+        self.label_12.setGeometry(QRect(100, 320, 400, 16))
+        self.label_12.setAlignment(Qt.AlignCenter)
         Core.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(Core)
@@ -140,5 +144,6 @@ class Ui_Core(object):
         self.label_11.setText(QCoreApplication.translate("Core", u"Comprimieren Breite", None))
         self.start_BTN.setText(QCoreApplication.translate("Core", u"Start", None))
         self.stop_BTN.setText(QCoreApplication.translate("Core", u"Stop", None))
+        self.label_12.setText(QCoreApplication.translate("Core", u"V1.2.3 - (c) 2023 B\u00fccherl Manuel", None))
     # retranslateUi
 

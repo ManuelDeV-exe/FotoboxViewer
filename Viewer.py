@@ -20,8 +20,6 @@ logo_Pfad = os.path.abspath('data/icon.png')
 
 hintergrundliste = ['data/BG_0.jpg','data/BG_1.jpg','data/BG_2.jpg','data/BG_3.jpg','data/BG_4.jpg','data/BG_5.jpg','data/BG_6.jpg']
 
-from ui_Window import Ui_FotoboxViewer
-
 class MainWindow(QWebEngineView):
     def __init__(self):
         super(MainWindow, self).__init__()
