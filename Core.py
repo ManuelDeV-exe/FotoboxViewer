@@ -57,7 +57,8 @@ class UiCore(QMainWindow):
         self.show()
 
     def openPGM(self):
-        res = subprocess.Popen(MyPaths.config['viewer_path'])
+        # subprocess.Popen(MyPaths.config['viewer_path'], stdout=subprocess.PIPE)
+        os.spawnl(os.P_NOWAIT,MyPaths.config['viewer_path'], "--startup")
 
         if True if MySettings.config['upload'] == "True" else False == True:
             for proc in psutil.process_iter():
@@ -68,7 +69,7 @@ class UiCore(QMainWindow):
                 except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
                     pass
             else:
-                res = subprocess.Popen(MyPaths.config['upload_path'])
+                subprocess.Popen(MyPaths.config['upload_path'], stdout=subprocess.PIPE)
 
     def save(self):
         MyPaths.write('kamera_folder', self.ui.path_kamera_folder.text())
@@ -93,24 +94,60 @@ def watchfolder():
 
         files = glob.glob(MyPaths.config['kamera_folder'] + r'\\*.jpg')
         files = sorted(files, key=os.path.getmtime)
+        
+        old_path = []
+        old_path.append(MyImages.config['big_1'])
+        old_path.append(MyImages.config['little_1'])
+        old_path.append(MyImages.config['little_1'])
+        old_path.append(MyImages.config['little_1'])
+        old_path.append(MyImages.config['little_1'])
 
-        try:
-            MyImages.write('big_1', files[len(files)-1])
-            if len(files) <=1: continue
-            MyImages.write('little_1', files[len(files)-2])
-            if len(files) <=2: continue
-            MyImages.write('little_2', files[len(files)-3])
-            if len(files) <=3: continue
-            MyImages.write('little_3', files[len(files)-4])
-            if len(files) <=4: continue
-            MyImages.write('little_4', files[len(files)-5])
-        except Exception as e:
-            print(e)
+        MyImages.read_new()
+
+        new_path = []
+        new_path.append(MyImages.config['big_1'])
+        new_path.append(MyImages.config['little_1'])
+        new_path.append(MyImages.config['little_1'])
+        new_path.append(MyImages.config['little_1'])
+        new_path.append(MyImages.config['little_1'])
+        
+        for index, new in enumerate(new_path):
+            if new == '' and len(files) == 0: 
+                continue
+            elif len(files) >= 1:
+                MyImages.write('big_1', files[len(files)-1])
+
+                for index, file in enumerate(files):
+                    if index == 0:continue
+                    MyImages.write(f'little_{index}', files[len(files)-index-1])
+            else:
+                if new != old_path[index]:
+                    try:
+                        MyImages.write('big_1', files[len(files)-1])
+                        print(files[len(files)-1])
+                        if len(files) <=1: continue
+                        MyImages.write('little_1', files[len(files)-2])
+                        print(files[len(files)-2])
+                        if len(files) <=2: continue
+                        MyImages.write('little_2', files[len(files)-3])
+                        print(files[len(files)-3])
+                        if len(files) <=3: continue
+                        MyImages.write('little_3', files[len(files)-4])
+                        print(files[len(files)-4])
+                        if len(files) <=4: continue
+                        MyImages.write('little_4', files[len(files)-5])
+                        print(files[len(files)-5])
+                    except Exception as e:
+                        print(e)
 
         if True if MySettings.config['upload'] == "True" else False == True:
             for file in files:
+                try:
+                    if moveFile.is_alive() or moveFileupload.is_alive():
+                        continue
+                except:pass
                 if read_upload_log(file) == True:
-                    moveFileupload = threading.Thread(target=move_to_upload, name='upload_folder', args=[file,], daemon=False)
+                    moveFileupload = threading.Thread(target=move_to_upload, name='upload_folder', args=[file,])
                     moveFileupload.start()
 
         if len(files) >= 6 and MyPaths.config['full_size_folder'] != "":
@@ -118,10 +155,10 @@ def watchfolder():
                 if moveFile.is_alive() or moveFileupload.is_alive():
                     continue
             except:pass
-            moveFile = threading.Thread(target=move_to_original, name=f'moveFile_{files[0]}', args=[files[0],], daemon=False)
+            moveFile = threading.Thread(target=move_to_original, name=f'moveFile_{files[0]}', args=[files[0],])
             moveFile.start()
 
-        time.sleep(0.5)
+        time.sleep(1)
 
 def log_copy_to_upload(file):
     if os.path.exists(MyPaths.config['kamera_folder'] + "/copy_to_upload.log") == False:
@@ -149,28 +186,34 @@ def move_to_upload(file):
     if os.path.exists(MyPaths.config['upload_folder']) == False:
         os.makedirs(MyPaths.config['upload_folder'])
 
-    img = Image.open(file)
+    try:
+        img = Image.open(file)
+        
+        b = img.width
+        h = img.height
 
-    b = img.width
-    h = img.height
+        faktor = int(MySettings.config['compressed_width']) / b
+        b = int(MySettings.config['compressed_width'])
+        h = h * faktor
 
-    faktor = int(MySettings.config['compressed_width']) / b
-    b = int(MySettings.config['compressed_width'])
-    h = h * faktor
+        filename = file.split("\\")
+        filename = filename[len(filename)-1]
 
-    filename = file.split("\\")
-    filename = filename[len(filename)-1]
+        img = img.resize((int(b), int(h)), Image.Resampling.LANCZOS)
+        img.save(MyPaths.config['upload_folder'] + "/" + filename, optimize=True, quality=80)
 
-    img = img.resize((int(b), int(h)), Image.Resampling.LANCZOS)
-    img.save(MyPaths.config['upload_folder'] + "/" + filename, optimize=True, quality=80)
-
-    log_copy_to_upload(file)
+        log_copy_to_upload(file)
+    except Exception as e:
+        print(e)
 
 def move_to_original(file):
-    if os.path.exists(MyPaths.config['full_size_folder']) == False:
-        os.makedirs(MyPaths.config['full_size_folder'])
-    shutil.copy(file, MyPaths.config['full_size_folder'])
-    os.remove(file)
+    try:
+        if os.path.exists(MyPaths.config['full_size_folder']) == False:
+            os.makedirs(MyPaths.config['full_size_folder'])
+        shutil.copy(file, MyPaths.config['full_size_folder'])
+        os.remove(file)
+    except Exception as e:
+        print(e)
 
 def start():
     global thread_wait
@@ -200,8 +243,10 @@ if __name__ == '__main__':
     app = QApplication(sys.argv)
 
     UiCore = UiCore()
+
+    MyImages.DeletesValue_reg()
     
-    watchfolder = threading.Thread(target=watchfolder, args=[], name='watchfolder', daemon=False)
+    watchfolder = threading.Thread(target=watchfolder, args=[], name='watchfolder')
     watchfolder.start()
 
     sys.exit(app.exec())

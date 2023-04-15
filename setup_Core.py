@@ -6,7 +6,7 @@ from cx_Freeze import setup, Executable
 files = ["data/", "index.html"]
 packages = [""]
 
-target = [Executable(script="Core.py",base="Win32GUI",icon="data/favicon.ico"), Executable(script="Viewer.py",base="Win32GUI",icon="data/favicon.ico"), Executable(script="FTP-Upload.py",base="Win32GUI",icon="data/favicon.ico")]
+target = [Executable(script="Core.py",base="Win32GUI",icon="data/favicon.ico"), Executable(script="FTP-Upload.py",base="Win32GUI",icon="data/favicon.ico")]
 
 # SETUP CX FREEZE
 setup(

@@ -1,6 +1,5 @@
 import sys, os
 import reg_config
-import Resourcen_rc
 
 myimages_schlüssel =('big_1', 'little_1', 'little_2', 'little_3', 'little_4')
 mypaths_schlüssel =('upload_folder', 'kamera_folder', 'viewer_path', 'upload_path', 'full_size_folder')
@@ -10,24 +9,28 @@ MyImages = reg_config.My_Config('Images', myimages_schlüssel)
 MyPaths = reg_config.My_Config('Paths', mypaths_schlüssel)
 MySettings = reg_config.My_Config('Settings', mysettings_schlüssel)
 
-from PySide6.QtGui import *
 from PySide6.QtWidgets import *
+from PySide6.QtCore import *
+from PySide6.QtGui import *
+import PySide6.QtWebEngineCore
 from PySide6.QtWebEngineWidgets import *
-import PySide6.QtCore as QtCore
 
 monitor_size_width, monitor_size_heigth = 1920, 1080
 logo_Pfad = os.path.abspath('data/icon.png')
 
 hintergrundliste = ['data/BG_0.jpg','data/BG_1.jpg','data/BG_2.jpg','data/BG_3.jpg','data/BG_4.jpg','data/BG_5.jpg','data/BG_6.jpg']
 
-class MainWindow(QWebEngineView):
+class MainWindow(QMainWindow):
     def __init__(self):
         super(MainWindow, self).__init__()
         self.setWindowIcon(QIcon(str(logo_Pfad)))
+
+        self.browser = QWebEngineView()
         self.loadPage()
 
         self.setContentsMargins(0,0,0,0)
-        self.setWindowFlag(QtCore.Qt.FramelessWindowHint , True)
+        self.setWindowFlag(Qt.FramelessWindowHint , True)
+        self.setCentralWidget(self.browser)
 
         close_btn = QPushButton('', self)
         close_btn.setStyleSheet("background-color: rgba(0,0,0,0);")
@@ -37,7 +40,7 @@ class MainWindow(QWebEngineView):
         
         self.showMaximized()
 
-        self.timer = QtCore.QTimer()
+        self.timer = QTimer()
         self.timer.timeout.connect(lambda: self.reloadPage())
         self.timer.start(500)
 
@@ -67,19 +70,33 @@ class MainWindow(QWebEngineView):
         html = html.replace('##img_3##', MyImages.config['little_3'])
         html = html.replace('##img_4##', MyImages.config['little_4'])
         
-        self.setHtml(html, QtCore.QUrl('file://'))
+        self.browser.setHtml(html, QUrl('file://'))
 
     def reloadPage(self):
-        old_path = MyImages.config['big_1']
+        old_path = []
+        old_path.append(MyImages.config['big_1'])
+        old_path.append(MyImages.config['little_1'])
+        old_path.append(MyImages.config['little_1'])
+        old_path.append(MyImages.config['little_1'])
+        old_path.append(MyImages.config['little_1'])
+
         MySettings.read_new()
         MyImages.read_new()
-        new_path = MyImages.config['big_1']
+
+        new_path = []
+        new_path.append(MyImages.config['big_1'])
+        new_path.append(MyImages.config['little_1'])
+        new_path.append(MyImages.config['little_1'])
+        new_path.append(MyImages.config['little_1'])
+        new_path.append(MyImages.config['little_1'])
         
-        if old_path != new_path:
-            self.loadPage()
+        for index, new in enumerate(new_path):
+            if new != old_path[index] :
+                self.loadPage()
 
 if __name__ == '__main__':
 
+    sys.argv.append("--disable-web-security")
     app = QApplication(sys.argv)
 
     MainWindow = MainWindow()

@@ -24,6 +24,10 @@ class My_Config():
     def read(self):
         for key in self.settings_key:
             self.config[str(key)] = winreg.QueryValueEx(self.settings_folder, key)[0]
+    
+    def DeletesValue_reg(self):
+        for key in self.settings_key:
+            winreg.SetValueEx(self.settings_folder, str(key), 0, winreg.REG_SZ, str(''))
 
     def read_new(self):
         for key in self.settings_key:
