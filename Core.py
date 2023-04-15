@@ -119,6 +119,7 @@ def watchfolder():
 
                 for index, file in enumerate(files):
                     if index == 0:continue
+                    if index >=5:continue
                     MyImages.write(f'little_{index}', files[len(files)-index-1])
             else:
                 if new != old_path[index]:
