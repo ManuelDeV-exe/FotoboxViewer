@@ -120,7 +120,7 @@ if __name__ == '__main__':
     
     FTP_starten = FTP_starten()
 
-    watchfolder_upload = threading.Thread(target=watchfolder_upload, args=[], name='watchfolder_upload', daemon=False)
+    watchfolder_upload = threading.Thread(target=watchfolder_upload, args=[], name='watchfolder_upload', daemon=True)
     watchfolder_upload.start()
 
     sys.exit(app.exec())

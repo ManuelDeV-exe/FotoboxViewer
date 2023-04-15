@@ -98,19 +98,19 @@ def watchfolder():
         except Exception as e:
             print(e)
 
-        if len(files) >= 6 and MyPaths.config['full_size_folder'] != "":
-            try:
-                if moveFile.is_alive():
-                    continue
-            except:pass
-            moveFile = threading.Thread(target=move_to_original, name=f'moveFile_{files[0]}', args=[files[0],], daemon=False)
-            moveFile.start()
-
         if True if MySettings.config['upload'] == "True" else False == True:
             for file in files:
                 if read_upload_log(file) == True:
-                    moveFileupload = threading.Thread(target=move_to_original, name='upload_folder', args=[file,], daemon=False)
+                    moveFileupload = threading.Thread(target=move_to_upload, name='upload_folder', args=[file,], daemon=True)
                     moveFileupload.start()
+
+        if len(files) >= 6 and MyPaths.config['full_size_folder'] != "":
+            try:
+                if moveFile.is_alive() or moveFileupload.is_alive():
+                    continue
+            except:pass
+            moveFile = threading.Thread(target=move_to_original, name=f'moveFile_{files[0]}', args=[files[0],], daemon=True)
+            moveFile.start()
 
         time.sleep(0.5)
 
@@ -120,8 +120,8 @@ def log_copy_to_upload(file):
             f.close()
 
     with open(MyPaths.config['kamera_folder'] + "/copy_to_upload.log", 'a+') as f:
-            f.write(file + '\n')
-            f.close()
+        f.write(file + '\n')
+        f.close()
 
 def read_upload_log(file):
     if os.path.exists(MyPaths.config['kamera_folder'] + "/copy_to_upload.log") == False:
@@ -161,7 +161,7 @@ def move_to_original(file):
     if os.path.exists(MyPaths.config['full_size_folder']) == False:
         os.makedirs(MyPaths.config['full_size_folder'])
     shutil.copy(file, MyPaths.config['full_size_folder'])
-    shutil.rmtree(file)
+    os.remove(file)
 
 def start():
     global thread_wait
