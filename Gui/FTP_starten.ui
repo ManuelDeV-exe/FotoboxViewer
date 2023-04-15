@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>FTP_starten</class>
+ <widget class="QMainWindow" name="FTP_starten">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>200</width>
+    <height>60</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>200</width>
+    <height>60</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>200</width>
+    <height>60</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>FTP_starten</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="../Resourcen.qrc">
+    <normaloff>:/Stock/data/icon.png</normaloff>:/Stock/data/icon.png</iconset>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QPushButton" name="start_BTN">
+    <property name="geometry">
+     <rect>
+      <x>45</x>
+      <y>30</y>
+      <width>46</width>
+      <height>24</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Start</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_6">
+    <property name="geometry">
+     <rect>
+      <x>65</x>
+      <y>10</y>
+      <width>81</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>FTP_Starten</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="stop_BTN">
+    <property name="geometry">
+     <rect>
+      <x>100</x>
+      <y>30</y>
+      <width>46</width>
+      <height>24</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Stop</string>
+    </property>
+   </widget>
+  </widget>
+ </widget>
+ <resources>
+  <include location="../Resourcen.qrc"/>
+ </resources>
+ <connections/>
+</ui>

@@ -1,1 +1,0 @@
-pyside6-rcc Resourcen.qrc > Resourcen_rc.py

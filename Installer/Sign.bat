@@ -1,1 +1,0 @@
-signtool.exe sign /uw /f "Certifikat.pfx" /p YoLSONgerS1 /t http://timestamp.digicert.com FotoboxViewer_installer1.1.exe

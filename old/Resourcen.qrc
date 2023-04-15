@@ -1,0 +1,17 @@
+<RCC>
+  <qresource prefix="Stock">
+    <file>data/logo_rechts.png</file>
+    <file>data/logo_links.png</file>
+    <file>data/222x148.png</file>
+    <file>data/780x520.png</file>
+    <file>data/icon.png</file>
+  </qresource>
+  <qresource prefix="BG">
+    <file>data/BG_1.jpg</file>
+    <file>data/BG_2.jpg</file>
+    <file>data/BG_3.jpg</file>
+    <file>data/BG_4.jpg</file>
+    <file>data/BG_5.jpg</file>
+    <file>data/BG_6.jpg</file>
+  </qresource>
+</RCC>
