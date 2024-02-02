@@ -18,49 +18,87 @@
             background-image: url(##hintergrund_img##);
             background-size: cover;
             background-position: top;
+            display: inline;
         }
 
         .logo {
             width: ##logo_breite##;
             height: auto;
         }
+
         #logo_rechts {
             position: absolute;
-            left: 45px;
-            top: 45px;
+            right: 5%;
+            top: 25%;
+            width: 240px;
+            height: auto;
         }
         #logo_links {
             position: absolute;
-            right: 45px;
-            top: 45px;
+            left: 5%;
+            top: 20%;
+            width: 200px;
+            height: auto;
+        }
+
+        #qr_code_pos {
+            position: absolute;
+            left: 5%;
+            top: 46%;
+            width: 200px;
+        }
+        #qr_code {
+            transform: translateY(-50%);
+            width: 100%;
+            height: auto;
+            position: sticky;
+            bottom: 50%;
+        }
+
+        #qr_code_logo {
+            position: relative;
+            transform: translateY(-50%);
+            width: 25%;
+            height: auto;
+            z-index: 100;
         }
 
         #big_img {
             position: absolute;
             width: ##big_img_width##;
-            top: 55px;
-            transform: translateX(-50%);
-            left: 50vw;
+            height: auto;
+            transform: translate(-50%,-50%);
+            top: 34.5%;
+            border-radius: 0.85vw;
         }
 
         #box {
+            transform: translateX(3.5%);
+            top: 70%;
             position: absolute;
-            bottom: 35px;
             display: flex;
             justify-content: space-around;
-            width: 90vw;
-            transform: translateX(-50%);
-            left: 50%;
+            width: 93vw;
+            height: auto;
         }
 
         .img_small {
             width: ##breite_small##;
+            height: auto;
+            border-radius: 0.35vw;
         }
 
     </style>
 </head>
-<body>
+<body id="body">
+    
     <img id="logo_links" class="logo" src="##werbung_links##" alt="">
+
+    <div id="qr_code_pos">
+        <img id="qr_code_logo" class="logo" src="##werbung_rechts##" alt="">
+        <img id="qr_code" class="logo" src="data/qrcode.svg" alt="">
+    </div>
+
     <img id="logo_rechts" class="logo" src="##werbung_rechts##" alt="">
 
     <img id="big_img" src="##big##" alt=""></div>

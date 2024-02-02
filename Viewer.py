@@ -1,5 +1,6 @@
 import sys, os
 import reg_config
+import time
 
 myimages_schlüssel =('big_1', 'little_1', 'little_2', 'little_3', 'little_4')
 mypaths_schlüssel =('upload_folder', 'kamera_folder', 'viewer_path', 'upload_path', 'full_size_folder')
@@ -24,7 +25,7 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super(MainWindow, self).__init__()
         self.setWindowIcon(QIcon(str(logo_Pfad)))
-
+        
         self.browser = QWebEngineView()
         self.loadPage()
 
@@ -34,7 +35,8 @@ class MainWindow(QMainWindow):
 
         close_btn = QPushButton('', self)
         close_btn.setStyleSheet("background-color: rgba(0,0,0,0);")
-        close_btn.setGeometry(0, 0, 500, 300)
+        close_btn.setStyleSheet("background-color: rgba(0,0,0,0);")
+        close_btn.setGeometry(0, 0, 500, 3000)
         close_btn.setCursor(QCursor(Qt.PointingHandCursor))
         close_btn.clicked.connect(self.close)
         
@@ -69,6 +71,7 @@ class MainWindow(QMainWindow):
         html = html.replace('##img_2##', MyImages.config['little_2'])
         html = html.replace('##img_3##', MyImages.config['little_3'])
         html = html.replace('##img_4##', MyImages.config['little_4'])
+
         
         self.browser.setHtml(html, QUrl('file://'))
 
@@ -76,9 +79,9 @@ class MainWindow(QMainWindow):
         old_path = []
         old_path.append(MyImages.config['big_1'])
         old_path.append(MyImages.config['little_1'])
-        old_path.append(MyImages.config['little_1'])
-        old_path.append(MyImages.config['little_1'])
-        old_path.append(MyImages.config['little_1'])
+        old_path.append(MyImages.config['little_2'])
+        old_path.append(MyImages.config['little_3'])
+        old_path.append(MyImages.config['little_4'])
 
         MySettings.read_new()
         MyImages.read_new()
@@ -86,10 +89,10 @@ class MainWindow(QMainWindow):
         new_path = []
         new_path.append(MyImages.config['big_1'])
         new_path.append(MyImages.config['little_1'])
-        new_path.append(MyImages.config['little_1'])
-        new_path.append(MyImages.config['little_1'])
-        new_path.append(MyImages.config['little_1'])
-        
+        new_path.append(MyImages.config['little_2'])
+        new_path.append(MyImages.config['little_3'])
+        new_path.append(MyImages.config['little_4'])
+
         for index, new in enumerate(new_path):
             if new != old_path[index] :
                 self.loadPage()

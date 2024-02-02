@@ -18,8 +18,10 @@ MyPaths = reg_config.My_Config('Paths', mypaths_schlüssel)
 MySettings = reg_config.My_Config('Settings', mysettings_schlüssel)
 MyPictrs = reg_config.My_Config('Pictrs', mypictrs_schlüssel)
 
-logo_Pfad = os.path.abspath('data/icon.png')
+logo_Pfad = os.path.abspath(r'data/icon.png')
 thread_wait = True
+global kill
+kill = False
 
 from PySide6.QtGui import *
 from PySide6.QtWidgets import *
@@ -88,7 +90,9 @@ class UiCore(QMainWindow):
         MyPictrs.write('galerie_folder', self.ui.Upload_folder_name.text())
 
 def watchfolder():
+    global kill
     while True:
+        if kill: break
         if thread_wait:
             continue
 
@@ -230,15 +234,19 @@ def stop():
     UiCore.ui.start_BTN.setStyleSheet('background-color: none')
     UiCore.ui.start_BTN.setEnabled(True)
 
+def ende():
+    app.exec()
+    global kill
+    kill = True
 
 if __name__ == '__main__':
     if MySettings.config['background_img'] == '': MySettings.write('background_img', '1')
     if MySettings.config['upload'] == '': MySettings.write('upload', 'False')
-    if MySettings.config['prozent_grosses_bild'] == '': MySettings.write('prozent_grosses_bild', '0.330')
-    if MySettings.config['prozent_kleines_bild'] == '': MySettings.write('prozent_kleines_bild', '0.15')
-    if MySettings.config['prozent_werbung'] == '': MySettings.write('prozent_werbung', '0.1')
-    if MyPaths.config['viewer_path'] == '': MyPaths.write('viewer_path', 'C:/Program Files/Fotobox/Viewer.exe')
-    if MyPaths.config['upload_path'] == '': MyPaths.write('upload_path', 'C:/Program Files/Fotobox/FTP-Upload.exe')
+    if MySettings.config['prozent_grosses_bild'] == '': MySettings.write('prozent_grosses_bild', '48')
+    if MySettings.config['prozent_kleines_bild'] == '': MySettings.write('prozent_kleines_bild', '24')
+    if MySettings.config['prozent_werbung'] == '': MySettings.write('prozent_werbung', '15')
+    if MyPaths.config['viewer_path'] == '': MyPaths.write('viewer_path', r'C:/Program Files/Fotobox/Viewer.exe')
+    if MyPaths.config['upload_path'] == '': MyPaths.write('upload_path', r'C:/Program Files/Fotobox/FTP-Upload.exe')
     if MySettings.config['compressed_width'] == '': MySettings.write('compressed_width', '2000')
 
     app = QApplication(sys.argv)
@@ -250,4 +258,4 @@ if __name__ == '__main__':
     watchfolder = threading.Thread(target=watchfolder, args=[], name='watchfolder')
     watchfolder.start()
 
-    sys.exit(app.exec())
+    sys.exit(ende())
