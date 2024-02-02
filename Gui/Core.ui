@@ -102,33 +102,10 @@
      </rect>
     </property>
    </widget>
-   <widget class="QLineEdit" name="prozent_werbung">
-    <property name="geometry">
-     <rect>
-      <x>15</x>
-      <y>260</y>
-      <width>96</width>
-      <height>22</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_3">
-    <property name="geometry">
-     <rect>
-      <x>15</x>
-      <y>235</y>
-      <width>101</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>prozent_werbung</string>
-    </property>
-   </widget>
    <widget class="QLineEdit" name="prozent_kleines_bild">
     <property name="geometry">
      <rect>
-      <x>115</x>
+      <x>120</x>
       <y>260</y>
       <width>106</width>
       <height>22</height>
@@ -138,7 +115,7 @@
    <widget class="QLabel" name="label_4">
     <property name="geometry">
      <rect>
-      <x>115</x>
+      <x>120</x>
       <y>235</y>
       <width>116</width>
       <height>16</height>
@@ -151,7 +128,7 @@
    <widget class="QLabel" name="label_5">
     <property name="geometry">
      <rect>
-      <x>225</x>
+      <x>230</x>
       <y>235</y>
       <width>116</width>
       <height>16</height>
@@ -164,7 +141,7 @@
    <widget class="QLineEdit" name="prozent_grosses_bild">
     <property name="geometry">
      <rect>
-      <x>225</x>
+      <x>230</x>
       <y>260</y>
       <width>106</width>
       <height>22</height>
@@ -174,7 +151,7 @@
    <widget class="QSpinBox" name="background">
     <property name="geometry">
      <rect>
-      <x>355</x>
+      <x>360</x>
       <y>260</y>
       <width>42</width>
       <height>22</height>
@@ -190,7 +167,7 @@
    <widget class="QLabel" name="label_6">
     <property name="geometry">
      <rect>
-      <x>345</x>
+      <x>350</x>
       <y>235</y>
       <width>81</width>
       <height>16</height>
@@ -308,7 +285,7 @@
    <widget class="QLineEdit" name="compressed_width">
     <property name="geometry">
      <rect>
-      <x>425</x>
+      <x>430</x>
       <y>260</y>
       <width>106</width>
       <height>22</height>
@@ -318,7 +295,7 @@
    <widget class="QLabel" name="label_11">
     <property name="geometry">
      <rect>
-      <x>425</x>
+      <x>430</x>
       <y>235</y>
       <width>116</width>
       <height>16</height>
@@ -364,10 +341,33 @@
      </rect>
     </property>
     <property name="text">
-     <string>V1.2.3 - (c) 2023 Bücherl Manuel</string>
+     <string>V1.5.0 - (c) 2024 Bücherl Manuel</string>
     </property>
     <property name="alignment">
      <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="prozent_werbung">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>260</y>
+      <width>106</width>
+      <height>22</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_13">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>235</y>
+      <width>116</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Werbung-%</string>
     </property>
    </widget>
   </widget>
