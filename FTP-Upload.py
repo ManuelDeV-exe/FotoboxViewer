@@ -7,6 +7,7 @@ import shutil
 
 import reg_config
 
+import PySide6
 from PySide6.QtGui import *
 from PySide6.QtWidgets import *
 
