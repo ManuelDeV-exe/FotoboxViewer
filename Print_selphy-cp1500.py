@@ -5,8 +5,14 @@ import time
 import glob
 import win32print
 import win32ui
+import threading
 
 import reg_config
+
+from PySide6.QtGui import *
+from PySide6.QtWidgets import *
+
+logo_Pfad = os.path.abspath('data/icon.png')
 
 config_schlüssel = ('mysql_host', 'mysql_username', 'mysql_password')
 MyConfig = reg_config.My_Config('Print_Config', config_schlüssel)
@@ -22,6 +28,26 @@ mysql_data["mysql_sql_tabel"] = "DatenBank"
 mysql = my_SQL.new_MySql_object(mysql_data)
 if mysql.verbunden == False:print("Ferhler, nicht verbunden.")
 mysql.read_all_data()
+
+from ui_FTP_starten import Ui_FTP_starten
+
+thread_wait = True
+
+class FTP_starten(QMainWindow):
+    def __init__(self):
+        super(FTP_starten, self).__init__()
+        self.ui = Ui_FTP_starten()
+        self.ui.setupUi(self)
+        self.setWindowIcon(QIcon(str(logo_Pfad)))
+
+        self.setWindowTitle('Print_selphy-cp1500')
+        self.ui.label_6.setText('Printservice starten')
+
+        self.ui.start_BTN.clicked.connect(start)
+        self.ui.stop_BTN.clicked.connect(stop)
+
+        self.show()
+
 
 def findImg(filename):
     pathlist = glob.glob(MyPaths.config['kamera_folder'] + '/**/*.jpg', recursive=True)
@@ -96,9 +122,11 @@ def printImage(img):
     except Exception as e:
         print(f"Ein Fehler ist aufgetreten: {e}")
 
-
-if __name__ == "__main__":
+def mainTastk():
     while True:
+        if thread_wait:
+            continue
+
         mysql.read_all_data()
 
         if len(mysql.data) > 0:
@@ -113,3 +141,27 @@ if __name__ == "__main__":
             CropImage(mysql.data[0][7], cords, mysql.data[0][0])
 
         time.sleep(10)
+
+def start():
+    global thread_wait
+    thread_wait = False 
+    
+    FTP_starten.ui.start_BTN.setStyleSheet('background-color: #84ffc0')
+    FTP_starten.ui.start_BTN.setEnabled(False)
+
+def stop():
+    global thread_wait
+    thread_wait = True
+
+    FTP_starten.ui.start_BTN.setStyleSheet('background-color: none')
+    FTP_starten.ui.start_BTN.setEnabled(True)
+
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
+    
+    FTP_starten = FTP_starten()
+
+    Mainthread = threading.Thread(target=mainTastk, args=[], name='Print_selphy-cp1500', daemon=True)
+    Mainthread.start()
+
+    sys.exit(app.exec())

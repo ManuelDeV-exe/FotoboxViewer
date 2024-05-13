@@ -5,7 +5,7 @@ from cx_Freeze import setup, Executable
 # ADD FILES
 packages = [""]
 
-target = [Executable(script="Core.py", base="Win32GUI", icon="data/favicon.ico"),Executable(script="FTP-Upload.py", base="Win32GUI", icon="data/favicon.ico"),]
+target = [Executable(script="Core.py", base="Win32GUI", icon="data/favicon.ico"),Executable(script="FTP-Upload.py", base="Win32GUI", icon="data/favicon.ico"),Executable(script="Print_selphy-cp1500.py", base="Win32GUI", icon="data/favicon.ico"),]
 
 build_exe_options = {
     'include_files': ["data/", "index.html"],
@@ -16,7 +16,7 @@ build_exe_options = {
 # SETUP CX FREEZE
 setup(
     name="Core",
-    version="1.2.3",
+    version="1.2.6",
     description="",
     author="Buecherl M.",
     options={"build_exe": build_exe_options},
