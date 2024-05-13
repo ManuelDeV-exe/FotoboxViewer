@@ -15,6 +15,8 @@ from PySide6.QtCore import *
 from PySide6.QtGui import *
 import PySide6.QtWebEngineCore
 from PySide6.QtWebEngineWidgets import *
+from PySide6.QtQuick import QQuickWindow, QSGRendererInterface
+QQuickWindow.setGraphicsApi(QSGRendererInterface.GraphicsApi.OpenGL)
 
 monitor_size_width, monitor_size_heigth = 1920, 1080
 logo_Pfad = os.path.abspath('data/icon.png')
@@ -44,7 +46,7 @@ class MainWindow(QMainWindow):
 
         self.timer = QTimer()
         self.timer.timeout.connect(lambda: self.reloadPage())
-        self.timer.start(500)
+        self.timer.start(600)
 
     def loadPage(self):
         with open('index.html', 'r') as f:
@@ -76,12 +78,13 @@ class MainWindow(QMainWindow):
         self.browser.setHtml(html, QUrl('file://'))
 
     def reloadPage(self):
+        time.sleep(0.2)
         old_path = []
         old_path.append(MyImages.config['big_1'])
         old_path.append(MyImages.config['little_1'])
-        old_path.append(MyImages.config['little_2'])
-        old_path.append(MyImages.config['little_3'])
-        old_path.append(MyImages.config['little_4'])
+        old_path.append(MyImages.config['little_1'])
+        old_path.append(MyImages.config['little_1'])
+        old_path.append(MyImages.config['little_1'])
 
         MySettings.read_new()
         MyImages.read_new()
@@ -89,9 +92,9 @@ class MainWindow(QMainWindow):
         new_path = []
         new_path.append(MyImages.config['big_1'])
         new_path.append(MyImages.config['little_1'])
-        new_path.append(MyImages.config['little_2'])
-        new_path.append(MyImages.config['little_3'])
-        new_path.append(MyImages.config['little_4'])
+        new_path.append(MyImages.config['little_1'])
+        new_path.append(MyImages.config['little_1'])
+        new_path.append(MyImages.config['little_1'])
 
         for index, new in enumerate(new_path):
             if new != old_path[index] :
