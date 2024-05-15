@@ -23,6 +23,7 @@ thread_wait = True
 global kill
 kill = False
 
+import PySide6
 from PySide6.QtGui import *
 from PySide6.QtWidgets import *
 

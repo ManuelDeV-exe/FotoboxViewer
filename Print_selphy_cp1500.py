@@ -1,16 +1,17 @@
 import sys, os
-from PIL import Image, ImageWin
-import my_mysql as my_SQL
 import time
 import glob
 import win32print
 import win32ui
 import threading
-
 import reg_config
+import my_mysql as my_SQL
 
+import PySide6
 from PySide6.QtGui import *
 from PySide6.QtWidgets import *
+
+from PIL import Image, ImageWin
 
 logo_Pfad = os.path.abspath('data/icon.png')
 

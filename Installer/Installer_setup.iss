@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Fotobox_Viewer"
-#define MyAppVersion "1.2.5"
+#define MyAppVersion "1.2.6"
 #define MyAppPublisher "3ddruck-mb.de"
 #define MyAppURL "https://www.3ddruck-mb.de"
 #define MyAppExeName "Core.exe"
@@ -42,8 +42,8 @@ Name: "german"; MessagesFile: "compiler:Languages\German.isl"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-Source: "P:\Python\FotoboxViewer\FotoboxViewer\build\exe.win-amd64-3.11\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
-Source: "P:\Python\FotoboxViewer\FotoboxViewer\build\exe.win-amd64-3.11\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "P:\Python\FotoboxViewer\FotoboxViewer\build\exe.win-amd64-3.12\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
+Source: "P:\Python\FotoboxViewer\FotoboxViewer\build\exe.win-amd64-3.12\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Registry]

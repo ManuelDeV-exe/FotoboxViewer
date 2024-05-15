@@ -129,3 +129,5 @@ dmypy.json
 .pyre/
 
 Installer/
+installer/
+/Output/

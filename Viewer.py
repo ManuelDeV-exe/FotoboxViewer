@@ -1,6 +1,14 @@
-import sys, os
+import sys
+import os
 import reg_config
 import time
+
+from PySide6.QtWidgets import *
+from PySide6.QtCore import *
+from PySide6.QtGui import *
+from PySide6.QtWebEngineWidgets import *
+# from PySide6.QtQuick import QQuickWindow, QSGRendererInterface
+# QQuickWindow.setGraphicsApi(QSGRendererInterface.GraphicsApi.OpenGL)
 
 myimages_schlüssel =('big_1', 'little_1', 'little_2', 'little_3', 'little_4')
 mypaths_schlüssel =('upload_folder', 'kamera_folder', 'viewer_path', 'upload_path', 'full_size_folder')
@@ -9,14 +17,6 @@ mysettings_schlüssel =('upload', 'prozent_grosses_bild', 'prozent_kleines_bild'
 MyImages = reg_config.My_Config('Images', myimages_schlüssel)
 MyPaths = reg_config.My_Config('Paths', mypaths_schlüssel)
 MySettings = reg_config.My_Config('Settings', mysettings_schlüssel)
-
-from PySide6.QtWidgets import *
-from PySide6.QtCore import *
-from PySide6.QtGui import *
-import PySide6.QtWebEngineCore
-from PySide6.QtWebEngineWidgets import *
-from PySide6.QtQuick import QQuickWindow, QSGRendererInterface
-QQuickWindow.setGraphicsApi(QSGRendererInterface.GraphicsApi.OpenGL)
 
 monitor_size_width, monitor_size_heigth = 1920, 1080
 logo_Pfad = os.path.abspath('data/icon.png')
@@ -73,7 +73,6 @@ class MainWindow(QMainWindow):
         html = html.replace('##img_2##', MyImages.config['little_2'])
         html = html.replace('##img_3##', MyImages.config['little_3'])
         html = html.replace('##img_4##', MyImages.config['little_4'])
-
         
         self.browser.setHtml(html, QUrl('file://'))
 
