@@ -5,6 +5,7 @@ __pycache__/
 
 # C extensions
 *.so
+*.exe
 
 # Distribution / packaging
 .Python
@@ -130,4 +131,3 @@ dmypy.json
 
 Installer/
 installer/
-/Output/
