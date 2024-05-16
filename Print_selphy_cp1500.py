@@ -110,7 +110,7 @@ def printImage(img):
 
         # Bild laden und auf spezifizierte Größe skalieren
         bmp = img.transpose(Image.ROTATE_90)
-        bmp.show()
+        # bmp.show() # gedrehtes Bild anzeigen
         dib = ImageWin.Dib(bmp)
         dib.draw(hDC.GetHandleOutput(), (0, 0, width_px, height_px))
 

@@ -28,7 +28,7 @@
 	
 	<?php
 	$verzeichnis = 'data/'; // Pfad zum Ordner, der die Bilder enthält
-	$bilder = glob($verzeichnis . '*.{jpg,jpeg,png,gif}', GLOB_BRACE); // Suche nach Bild-Dateien
+	$bilder = glob($verzeichnis . '*.{JPG,jpg,jpeg,png,gif}', GLOB_BRACE); // Suche nach Bild-Dateien
     
     $i = 0;
 	foreach ($bilder as $bild) {

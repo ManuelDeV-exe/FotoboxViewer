@@ -1,5 +1,5 @@
 $(document).ready(function(){
-	// Open IMG in Overview
+
 	$(".images").click(function(){
 		LoadImage($(this).attr('name'), $(this).attr('src'), $(this).attr('index'));
 	});

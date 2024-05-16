@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'Core.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.6.1
+## Created by: Qt User Interface Compiler version 6.7.0
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -64,7 +64,7 @@ class Ui_Core(object):
         self.prozent_grosses_bild.setGeometry(QRect(230, 260, 106, 22))
         self.background = QSpinBox(self.centralwidget)
         self.background.setObjectName(u"background")
-        self.background.setGeometry(QRect(360, 260, 42, 22))
+        self.background.setGeometry(QRect(355, 260, 60, 22))
         self.background.setMinimum(1)
         self.background.setMaximum(7)
         self.label_6 = QLabel(self.centralwidget)

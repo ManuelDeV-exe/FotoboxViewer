@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Fotobox_Viewer"
-#define MyAppVersion "1.2.6"
+#define MyAppVersion "1.2.7"
 #define MyAppPublisher "3ddruck-mb.de"
 #define MyAppURL "https://www.3ddruck-mb.de"
 #define MyAppExeName "Core.exe"
@@ -57,18 +57,18 @@ Root: HKA; Subkey: "Software\Classes\Applications\{#MyAppExeName}\SupportedTypes
 Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
 Name: "{group}\FTP-Upload.exe"; Filename: "{app}\FTP-Upload.exe"
 Name: "{group}\Viewer.exe"; Filename: "{app}\Viewer.exe"
-Name: "{group}\Print_selphy_cp1500.exe"; Filename: "{app}\Viewer.exe"
+Name: "{group}\Print_selphy_cp1500.exe"; Filename: "{app}\Print_selphy_cp1500.exe"
 Name: "{group}\{cm:ProgramOnTheWeb,{#MyAppName}}"; Filename: "{#MyAppURL}"
 Name: "{group}\{cm:ProgramOnTheWeb,FTP-Upload.ex}"; Filename: "FTP-Upload.exe"
 Name: "{group}\{cm:ProgramOnTheWeb,Viewer.exe}"; Filename: "Viewer.exe"
 Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon
 Name: "{autodesktop}\FTP-Upload.exe"; Filename: "{app}\FTP-Upload.exe"; Tasks: desktopicon
 Name: "{autodesktop}\Viewer.exe"; Filename: "{app}\Viewer.exe"; Tasks: desktopicon
-Name: "{autodesktop}\Print_selphy_cp1500.exe"; Filename: "{app}\Viewer.exe"; Tasks: desktopicon
+Name: "{autodesktop}\Print_selphy_cp1500.exe"; Filename: "{app}\Print_selphy_cp1500.exe"; Tasks: desktopicon
 
 [Run]
 Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
 Filename: "{app}\FTP-Upload.exe"; Description: "{cm:LaunchProgram,{#StringChange('FTP-Upload.exe', '&', '&&')}}"; Flags: nowait postinstall skipifsilent
 Filename: "{app}\Viewer.exe"; Description: "{cm:LaunchProgram,{#StringChange('Viewer.exe', '&', '&&')}}"; Flags: nowait postinstall skipifsilent
-Filename: "{app}\Print_selphy_cp1500.exe"; Description: "{cm:LaunchProgram,{#StringChange('Viewer.exe', '&', '&&')}}"; Flags: nowait postinstall skipifsilent
+Filename: "{app}\Print_selphy_cp1500.exe"; Description: "{cm:LaunchProgram,{#StringChange('Print_selphy_cp1500.exe', '&', '&&')}}"; Flags: nowait postinstall skipifsilent
 

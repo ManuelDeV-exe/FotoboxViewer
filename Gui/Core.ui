@@ -151,9 +151,9 @@
    <widget class="QSpinBox" name="background">
     <property name="geometry">
      <rect>
-      <x>360</x>
+      <x>355</x>
       <y>260</y>
-      <width>42</width>
+      <width>60</width>
       <height>22</height>
      </rect>
     </property>
