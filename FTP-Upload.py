@@ -61,6 +61,7 @@ def upload_file(file):
                     # Rekursiver Aufruf für Unterverzeichnisse
                     ftp.mkd(item)
             
+            ftp.cwd("js")
             for item in os.listdir(os.path.abspath('data\ImagePage\js')):
                 local_path = os.path.join(os.path.abspath('data\ImagePage\js'), item)
                 if os.path.isfile(local_path):
@@ -70,6 +71,7 @@ def upload_file(file):
                 elif os.path.isdir(local_path):
                     # Rekursiver Aufruf für Unterverzeichnisse
                     ftp.mkd(item)
+            ftp.cwd("../")
 
         ftp.cwd("data")
         myfile = open(file, 'rb')
