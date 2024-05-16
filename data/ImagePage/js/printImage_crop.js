@@ -5,7 +5,7 @@ $(document).ready(function () {
 
 	stage.setOptions({
 		canResize: false, // Deaktiviert das Ändern der Größe
-		aspectRatio: 1.48   // Verhältnis von Breite zu Höhe, 1:1 für Quadrat
+		aspectRatio: 1.56   // Verhältnis von Breite zu Höhe, 1:1 für Quadrat
 	});
 
 	stage.listen('crop.update', (widget, e) => {

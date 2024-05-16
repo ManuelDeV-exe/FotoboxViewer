@@ -61,7 +61,7 @@ Name: "{group}\Print_selphy_cp1500.exe"; Filename: "{app}\Print_selphy_cp1500.ex
 Name: "{group}\{cm:ProgramOnTheWeb,{#MyAppName}}"; Filename: "{#MyAppURL}"
 Name: "{group}\{cm:ProgramOnTheWeb,FTP-Upload.ex}"; Filename: "FTP-Upload.exe"
 Name: "{group}\{cm:ProgramOnTheWeb,Viewer.exe}"; Filename: "Viewer.exe"
-Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon
+Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\Core.exe"; Tasks: desktopicon
 Name: "{autodesktop}\FTP-Upload.exe"; Filename: "{app}\FTP-Upload.exe"; Tasks: desktopicon
 Name: "{autodesktop}\Viewer.exe"; Filename: "{app}\Viewer.exe"; Tasks: desktopicon
 Name: "{autodesktop}\Print_selphy_cp1500.exe"; Filename: "{app}\Print_selphy_cp1500.exe"; Tasks: desktopicon

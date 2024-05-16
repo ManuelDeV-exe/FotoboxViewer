@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Auto Refresh Settings</title>
+  <style>
+    body {
+      width: 200px;
+      font-family: Arial, sans-serif;
+    }
+    input[type=number] {
+      width: 50px;
+    }
+    button {
+      margin-top: 10px;
+    }
+    label {
+      display: flex;
+      align-items: center;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h4>Set Refresh Interval (minutes)</h4>
+  <input type="number" id="interval" min="1" value="1">
+  <button id="save">Save</button>
+  <label>
+    <input type="checkbox" id="enable"> Enable Auto Refresh
+  </label>
+  <script src="popup.js"></script>
+</body>
+</html>
