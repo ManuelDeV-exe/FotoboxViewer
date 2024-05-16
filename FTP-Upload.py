@@ -37,15 +37,31 @@ class FTP_starten(QMainWindow):
 
 def upload_file(file):
     try:       
-        ftp = ftplib.FTP(MyPictrs.config['ftp_host'])
+        ftp = ftplib.FTP_TLS()
+        ftp.connect(MyPictrs.config['ftp_host'])
+
+        ftp.auth()
+        ftp.prot_p()
+
         ftp.login(MyPictrs.config['ftp_user'],MyPictrs.config['ftp_password'])
 
         try:
-            ftp.cwd("autoimport/" + MyPictrs.config['galerie_folder'])
+            ftp.cwd(MyPictrs.config['galerie_folder'])
         except:
-            ftp.mkd("autoimport/" + MyPictrs.config['galerie_folder'])
-            ftp.cwd("autoimport/" + MyPictrs.config['galerie_folder'])
+            ftp.mkd(MyPictrs.config['galerie_folder'])
+            ftp.cwd(MyPictrs.config['galerie_folder'])
 
+            for item in os.listdir(os.path.abspath('data\ImagePage')):
+                local_path = os.path.join(os.path.abspath('data\ImagePage'), item)
+                if os.path.isfile(local_path):
+                    # Lade die Datei hoch
+                    with open(local_path, 'rb') as file:
+                        ftp.storbinary(f'STOR {item}', file)
+                elif os.path.isdir(local_path):
+                    # Rekursiver Aufruf für Unterverzeichnisse
+                    ftp.mkd(item)
+
+        ftp.cwd("data")
         myfile = open(file, 'rb')
 
         filename = file.split("\\")

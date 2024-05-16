@@ -17,7 +17,7 @@ logo_Pfad = os.path.abspath('data/icon.png')
 
 config_schlüssel = ('mysql_host', 'mysql_username', 'mysql_password')
 MyConfig = reg_config.My_Config('Print_Config', config_schlüssel)
-MyPaths = reg_config.My_Config('Paths', ('kamera_folder',))
+MyPaths = reg_config.My_Config('Paths', ('kamera_folder','full_size_folder',))
 
 mysql_data = {}
 mysql_data["mysql_host"] = MyConfig.config['mysql_host']
@@ -54,7 +54,7 @@ def findImg(filename):
     pathlist = glob.glob(MyPaths.config['kamera_folder'] + '/**/*.jpg', recursive=True)
 
     for path in pathlist:
-        if filename in path:
+        if filename in path and str(MyPaths.config['full_size_folder']) not in str(path):
             return path
 
 def CropImage(img, cords, sqlIndex):
