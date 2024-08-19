@@ -73,11 +73,21 @@ def upload_file(file):
                     ftp.mkd(item)
             ftp.cwd("../")
 
+        try:
+            ftp.cwd("data")
+        except:
+            ftp.mkd("data")
+
         ftp.cwd("data")
         myfile = open(file, 'rb')
 
         filename = file.split("\\")
         filename = filename[len(filename)-1]
+
+        if filename.endswith(('.gif', '.jpeg', '.jpg')):
+                ftp.sendcmd('TYPE I')  # Binärmodus für Bilder
+        elif filename.endswith(('.html', '.php')):
+            ftp.sendcmd('TYPE A')  # ASCII-Modus für HTML und PHP
 
         print(f"Upload start -> {file}")
 

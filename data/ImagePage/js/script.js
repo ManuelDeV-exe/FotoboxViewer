@@ -1,5 +1,14 @@
 $(document).ready(function(){
 
+	let timeout;
+
+	function resetTimeout() {
+		clearTimeout(timeout);
+		timeout = setTimeout(function () {
+			location.reload();
+		}, 60000); // 3 Minuten in Millisekunden
+	}
+
 	$(".images").click(function(){
 		LoadImage($(this).attr('name'), $(this).attr('src'), $(this).attr('index'));
 	});
@@ -25,6 +34,13 @@ $(document).ready(function(){
 	$("#zruck").click(function () {
 		zruck($("#big_img").attr('index'));
 	});
+
+	// Initiales Setzen des Timeouts
+	resetTimeout();
+
+	// Timeout zurücksetzen bei Benutzeraktivität
+	$(document).on('mousemove keydown click scroll touchstart', resetTimeout);
+
 
 });
 
@@ -93,3 +109,4 @@ function downloadFile(filepath, name) {
 function printImage(filepath) {
 	window.open("./printImage.php?path="+ filepath); 
 }
+

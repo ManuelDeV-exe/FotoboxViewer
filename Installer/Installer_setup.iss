@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Fotobox_Viewer"
-#define MyAppVersion "1.2.7"
+#define MyAppVersion "1.2.8"
 #define MyAppPublisher "3ddruck-mb.de"
 #define MyAppURL "https://www.3ddruck-mb.de"
 #define MyAppExeName "Core.exe"
@@ -54,7 +54,7 @@ Root: HKA; Subkey: "Software\Classes\{#MyAppAssocKey}\shell\open\command"; Value
 Root: HKA; Subkey: "Software\Classes\Applications\{#MyAppExeName}\SupportedTypes"; ValueType: string; ValueName: ".myp"; ValueData: ""
 
 [Icons]
-Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
+Name: "{group}\{#MyAppName}"; Filename: "{app}\Core.exe"
 Name: "{group}\FTP-Upload.exe"; Filename: "{app}\FTP-Upload.exe"
 Name: "{group}\Viewer.exe"; Filename: "{app}\Viewer.exe"
 Name: "{group}\Print_selphy_cp1500.exe"; Filename: "{app}\Print_selphy_cp1500.exe"

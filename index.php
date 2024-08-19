@@ -101,15 +101,27 @@
 
     <img id="logo_rechts" class="logo" src="##werbung_rechts##" alt="">
 
-    <img id="big_img" src="##big##" alt="" loading="lazy">
-	</div>
+	<?php
+	$verzeichnis = '##verzeichnis##'; // Pfad zum Ordner, der die Bilder enthält
+	$bilder = glob($verzeichnis . '*.{JPG,jpg,jpeg,png,gif}', GLOB_BRACE); // Suche nach Bild-Dateien
+    
+    $i = 0;
 
-    <div id="box">
-        <img id="img_1" class="img_small" src="##img_1##" alt="" loading="lazy">
-        <img id="img_2" class="img_small" src="##img_2##" alt="" loading="lazy">
-        <img id="img_3" class="img_small" src="##img_3##" alt="" loading="lazy">
-        <img id="img_4" class="img_small" src="##img_4##" alt="" loading="lazy">
-    </div>
+	foreach ($bilder as $bild) {
+		if ($i == 0) {
+			echo '<img id="big_img" src="' . $bild . '" alt="" loading="lazy">';
+			echo '</div>';
+			echo '<div id="box">';
+		 } else {
+			echo '<img id="img_'. $i .'" class="img_small" src="' . $bild . '" alt="" loading="lazy">';
+		}
+		
+        $i += 1; 
+    }
+	echo '</div>';
+	?>
+    
+	
 
 </body>
 </html>
