@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Fotobox</title>
 
     <style>
         body {
@@ -15,14 +15,14 @@
             height: 100vh;
             text-align: center;
             margin: 0;
-            background-image: url(##hintergrund_img##);
+            background-image: url(data/BG_2.jpg);
             background-size: cover;
             background-position: top;
             display: inline;
         }
 
         .logo {
-            width: ##logo_breite##;
+            width: 15.0%;
             height: auto;
         }
 
@@ -65,7 +65,7 @@
 
         #big_img {
             position: absolute;
-            width: ##big_img_width##;
+            width: 48.0%;
             height: auto;
             transform: translate(-50%,-50%);
             top: 34.5%;
@@ -83,7 +83,7 @@
         }
 
         .img_small {
-            width: ##breite_small##;
+            width: 24.0%;
             height: auto;
             border-radius: 0.35vw;
         }
@@ -91,37 +91,38 @@
     </style>
 </head>
 <body id="body">
-    
-    <img id="logo_links" class="logo" src="##werbung_links##" alt="">
-
-    <div id="qr_code_pos">
-        <img id="qr_code_logo" class="logo" src="##werbung_rechts##" alt="">
-        <img id="qr_code" class="logo" src="data/qrcode.svg" alt="">
-    </div>
-
-    <img id="logo_rechts" class="logo" src="##werbung_rechts##" alt="">
 
 	<?php
-	$verzeichnis = '##verzeichnis##'; // Pfad zum Ordner, der die Bilder enthält
-	$bilder = glob($verzeichnis . '*.{JPG,jpg,jpeg,png,gif}', GLOB_BRACE); // Suche nach Bild-Dateien
-    
-    $i = 0;
-
-	foreach ($bilder as $bild) {
-		if ($i == 0) {
-			echo '<img id="big_img" src="' . $bild . '" alt="" loading="lazy">';
-			echo '</div>';
-			echo '<div id="box">';
-		 } else {
-			echo '<img id="img_'. $i .'" class="img_small" src="' . $bild . '" alt="" loading="lazy">';
-		}
-		
-        $i += 1; 
-    }
-	echo '</div>';
-	?>
-    
 	
+    $verzeichnis = 'C:\Users\b_m21\Downloads\DaniLaura\\'; // Pfad zum Ordner, der die Bilder enthält
+	$bilder = glob($verzeichnis . '*.{JPG,jpg,jpeg,png,gif}', GLOB_BRACE); // Suche nach Bild-Dateien
+	
+    $i = 0;
+    foreach ($bilder as $bild) {
+        echo '<img src="' . $bild . '">';
+        $i += 1;
+    }
+	
+	echo
+    '<img id="logo_links" class="logo" src="data/logo_links.png" alt="logo_links">'.
 
+    '<div id="qr_code_pos">'.
+    '    <img id="qr_code_logo" class="logo" src="data/logo_rechts.png" alt="qr_code_logo">'.
+    '    <img id="qr_code" class="logo" src="data/qrcode.svg" alt="qr_code">'.
+    '</div>'.
+
+    '<img id="logo_rechts" class="logo" src="data/logo_rechts.png" alt="logo_rechts">'.
+
+    '<img id="big_img" src="" alt="big_img">'.
+	'</div>'.
+
+    '<div id="box">'.
+    '    <img id="img_1" class="img_small" src="" alt="img_1">'.
+    '    <img id="img_2" class="img_small" src="" alt="img_2">'.
+    '   <img id="img_3" class="img_small" src="" alt="img_3">'.
+    '    <img id="img_4" class="img_small" src="" alt="img_4">'.
+    '</div>';
+		
+	?>
 </body>
 </html>

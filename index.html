@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+	<! <meta http-equiv="refresh" content="2; url=#">
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Fotobox</title>
 
     <style>
         body {
@@ -91,25 +92,32 @@
     </style>
 </head>
 <body id="body">
-    
-    <img id="logo_links" class="logo" src="##werbung_links##" alt="">
 
-    <div id="qr_code_pos">
-        <img id="qr_code_logo" class="logo" src="##werbung_rechts##" alt="">
-        <img id="qr_code" class="logo" src="data/qrcode.svg" alt="">
-    </div>
+	<?php
+	
+    $verzeichnis = ''; // Pfad zum Ordner, der die Bilder enthält
+	$bilder = glob($verzeichnis . '*.{JPG,jpg,jpeg,png,gif}', GLOB_BRACE); // Suche nach Bild-Dateien
+			
+	echo
+    '<img id="logo_links" class="logo" src="##werbung_links##" alt="logo_links">'.
 
-    <img id="logo_rechts" class="logo" src="##werbung_rechts##" alt="">
+    '<div id="qr_code_pos">'.
+    '    <img id="qr_code_logo" class="logo" src="##werbung_rechts##" alt="qr_code_logo">'.
+    '    <img id="qr_code" class="logo" src="data/qrcode.svg" alt="qr_code">'.
+    '</div>'.
 
-    <img id="big_img" src="##big##" alt="" loading="lazy">
-	</div>
+    '<img id="logo_rechts" class="logo" src="##werbung_rechts##" alt="logo_rechts">'.
 
-    <div id="box">
-        <img id="img_1" class="img_small" src="##img_1##" alt="" loading="lazy">
-        <img id="img_2" class="img_small" src="##img_2##" alt="" loading="lazy">
-        <img id="img_3" class="img_small" src="##img_3##" alt="" loading="lazy">
-        <img id="img_4" class="img_small" src="##img_4##" alt="" loading="lazy">
-    </div>
+    '<img id="big_img" src="' . $bilder[0] . '" alt="big_img">'.
+	'</div>'.
 
+    '<div id="box">'.
+    '    <img id="img_1" class="img_small" src="' . $bilder[1] . '" alt="img_1">'.
+    '    <img id="img_2" class="img_small" src="' . $bilder[2] . '" alt="img_2">'.
+    '    <img id="img_3" class="img_small" src="' . $bilder[3] . '" alt="img_3">'.
+    '    <img id="img_4" class="img_small" src="' . $bilder[4] . '" alt="img_4">'.
+    '</div>';
+		
+	?>
 </body>
 </html>
