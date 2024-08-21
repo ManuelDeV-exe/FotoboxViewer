@@ -11,6 +11,7 @@ from PySide6.QtWidgets import *
 from PySide6.QtCore import *
 from PySide6.QtGui import *
 from PySide6.QtWebEngineWidgets import QWebEngineView
+from PySide6.QtWebEngineCore import QWebEngineSettings
 from PySide6.QtQuick import QQuickWindow, QSGRendererInterface
 QQuickWindow.setGraphicsApi(QSGRendererInterface.GraphicsApi.Software)
 
@@ -46,7 +47,8 @@ class MainWindow(QMainWindow):
         
         self.browser = QWebEngineView()
 
-        self.loadPage()
+        # Disable all security settings for QWebEngineView
+        self.disable_security_settings()
 
         self.setContentsMargins(0,0,0,0)
         self.setWindowFlag(Qt.FramelessWindowHint , True)
@@ -57,48 +59,17 @@ class MainWindow(QMainWindow):
         close_btn.setGeometry(0, 0, 500, 3000)
         close_btn.setCursor(QCursor(Qt.PointingHandCursor))
         close_btn.clicked.connect(self.close)
-        
+
+        self.browser.setUrl("http://localhost:8000/index.php")
+
         self.showMaximized()
+
+        self.browser.loadStarted.connect(self.before_page_load)
 
         self.timer = QTimer()
         self.timer.timeout.connect(lambda: self.reloadPage())
         self.timer.start(500)
-
-    def loadPage(self):
-        global arbeit
-        arbeit = True
-
-        with open('index.html', 'r') as f:
-            html = f.read()
-            f.close()
-
-        prozent_werbung = float(MySettings.config['prozent_werbung'])
-        prozent_grosses_bild = float(MySettings.config['prozent_grosses_bild'])
-        prozent_kleines_bild = float(MySettings.config['prozent_kleines_bild'])
-
-        html = html.replace('##logo_breite##', f'{prozent_werbung}%')
-        html = html.replace('##breite##', f'{monitor_size_width*prozent_werbung}px')
-        html = html.replace('##big_img_width##', f'{prozent_grosses_bild}%')
-        html = html.replace('##breite_small##', f'{prozent_kleines_bild}%')
-
-        html = html.replace('##werbung_links##', 'data/logo_links.png')
-        html = html.replace('##werbung_rechts##', 'data/logo_rechts.png')
         
-        bg = hintergrundliste[int(MySettings.config['background_img'])]
-        html = html.replace('##hintergrund_img##', bg)
-
-        # MyImages.config['big_1']
-        html = html.replace('##big##', MyImages.config['big_1'])
-
-        # MyImages.config['little_1']
-        html = html.replace('##img_1##', MyImages.config['little_1'])
-        html = html.replace('##img_2##', MyImages.config['little_2'])
-        html = html.replace('##img_3##', MyImages.config['little_3'])
-        html = html.replace('##img_4##', MyImages.config['little_4'])
-
-        self.browser.setHtml(html, QUrl('file://'))
-        arbeit = False
-
     def reloadPage(self):
         global old_path
         global arbeit
@@ -121,13 +92,88 @@ class MainWindow(QMainWindow):
             old_path.append(MyImages.config['little_3'])
             old_path.append(MyImages.config['little_4'])
             print('reload')
-            self.loadPage()
+            self.browser.reload()
+            
+    def before_page_load(self):
+        loadPage()
 
+    def disable_security_settings(self):
+        settings = self.browser.settings()
+        
+        # Allow access to local file system from file URLs
+        settings.setAttribute(QWebEngineSettings.LocalContentCanAccessFileUrls, True)
+        settings.setAttribute(QWebEngineSettings.LocalContentCanAccessRemoteUrls, True)
+        
+        # Disable cross-origin restrictions
+        settings.setAttribute(QWebEngineSettings.AllowRunningInsecureContent, True)
+        
+        # Disable XSS auditing
+        settings.setAttribute(QWebEngineSettings.XSSAuditingEnabled, False)
+        
+        # Enable mixed content (HTTP content on HTTPS sites)
+        settings.setAttribute(QWebEngineSettings.AllowRunningInsecureContent, True)
+        
+        # Enable potentially insecure features
+        settings.setAttribute(QWebEngineSettings.JavascriptCanAccessClipboard, True)
+        settings.setAttribute(QWebEngineSettings.JavascriptCanOpenWindows, True)
+        settings.setAttribute(QWebEngineSettings.WebGLEnabled, True)
+        settings.setAttribute(QWebEngineSettings.PluginsEnabled, True)
+
+        # Allow all pop-ups and iframes
+        settings.setAttribute(QWebEngineSettings.AllowWindowActivationFromJavaScript, True)
+
+def loadPage():
+    with open('index.html', 'r') as f:
+        html = f.read()
+        f.close()
+
+    prozent_werbung = float(MySettings.config['prozent_werbung'])
+    prozent_grosses_bild = float(MySettings.config['prozent_grosses_bild'])
+    prozent_kleines_bild = float(MySettings.config['prozent_kleines_bild'])
+
+    kamera_folder = MyPaths.config['kamera_folder'] + "\\"
+
+    html = html.replace('##kamera_folder##', f'{kamera_folder}')
+
+    html = html.replace('##logo_breite##', f'{prozent_werbung}%')
+    html = html.replace('##breite##', f'{monitor_size_width*prozent_werbung}px')
+    html = html.replace('##big_img_width##', f'{prozent_grosses_bild}%')
+    html = html.replace('##breite_small##', f'{prozent_kleines_bild}%')
+
+    html = html.replace('##werbung_links##', 'data/logo_links.png')
+    html = html.replace('##werbung_rechts##', 'data/logo_rechts.png')
+    
+    bg = hintergrundliste[int(MySettings.config['background_img'])]
+    html = html.replace('##hintergrund_img##', bg)
+
+    # MyImages.config['big_1']
+    html = html.replace('##big##', MyImages.config['big_1'])
+
+    # MyImages.config['little_1']
+    html = html.replace('##img_1##', MyImages.config['little_1'])
+    html = html.replace('##img_2##', MyImages.config['little_2'])
+    html = html.replace('##img_3##', MyImages.config['little_3'])
+    html = html.replace('##img_4##', MyImages.config['little_4'])
+
+    path = kamera_folder
+
+    if os.path.exists(os.path.abspath(path + r"\data")):
+        pass
+    else:
+        shutil.copytree(os.path.abspath("data"), os.path.abspath(path + r"\data"))
+
+    path = os.path.abspath(path + "\index.php")
+    with open(path, 'w+') as f:
+        f.write(html)
+        f.close()
 
 if __name__ == '__main__':
 
-    sys.argv.append("--disable-web-security")
     app = QApplication(sys.argv)
+
+    sys.argv.append("--disable-web-security")
+    sys.argv.append("--allow-file-access-from-files")
+    sys.argv.append("--allow-file-access")
 
     MainWindow = MainWindow()
 

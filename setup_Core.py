@@ -8,14 +8,14 @@ target = [Executable(script="Core.py", base="Win32GUI", icon="data/favicon.ico")
           ]
 
 build_exe_options = {
-    "include_files": ["data/", "index.html","platforms/"],
+    "include_files": ["data/", "index.html","platforms/", "dist/Viewer.exe", "dist/php_server.exe"],
     "excludes": ["tkinter", "unittest"],
 }
 
 # SETUP CX FREEZE
 setup(
     name="Core",
-    version="1.2.8",
+    version="1.3.0",
     description="",
     author="Buecherl M.",
     options={"build_exe": build_exe_options},

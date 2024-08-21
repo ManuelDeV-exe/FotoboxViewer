@@ -4,6 +4,7 @@ import reg_config
 import shutil
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from urllib.parse import unquote
+import mimetypes
 
 mypaths_schlüssel = ('kamera_folder',)
 MyPaths = reg_config.My_Config('Paths', mypaths_schlüssel)
@@ -53,11 +54,16 @@ class PHPRequestHandler(BaseHTTPRequestHandler):
 
     def handle_file_request(self, file_path):
         try:
+            # Determine the content type
+            mime_type, _ = mimetypes.guess_type(file_path)
+            if mime_type is None:
+                mime_type = 'application/octet-stream'
+
             # Open the file requested by the client
             with open(file_path, 'rb') as file:
                 # Send the response status code
                 self.send_response(200)
-                self.send_header('Content-type', 'text/html')
+                self.send_header('Content-type', mime_type)
                 self.end_headers()
 
                 # Send the content of the file
@@ -72,5 +78,8 @@ def run(server_class=HTTPServer, handler_class=PHPRequestHandler, port=8000):
     httpd.serve_forever()
 
 if __name__ == "__main__":
+    print("start")
     os.chdir(path)
+    print("running")
     run()
+
