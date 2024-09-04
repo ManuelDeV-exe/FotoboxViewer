@@ -15,7 +15,6 @@ from PySide6.QtWebEngineCore import QWebEngineSettings
 from PySide6.QtQuick import QQuickWindow, QSGRendererInterface
 QQuickWindow.setGraphicsApi(QSGRendererInterface.GraphicsApi.Software)
 
-
 myimages_schlüssel =('big_1', 'little_1', 'little_2', 'little_3', 'little_4')
 mypaths_schlüssel =('upload_folder', 'kamera_folder', 'viewer_path', 'upload_path', 'full_size_folder')
 mysettings_schlüssel =('upload', 'prozent_grosses_bild', 'prozent_kleines_bild', 'prozent_werbung', 'background_img', 'compressed_width')
@@ -85,6 +84,7 @@ class MainWindow(QMainWindow):
         new_path.append(MyImages.config['little_4'])
 
         if new_path != old_path and arbeit == False:
+            arbeit == True
             old_path = []
             old_path.append(MyImages.config['big_1'])
             old_path.append(MyImages.config['little_1'])
@@ -93,6 +93,8 @@ class MainWindow(QMainWindow):
             old_path.append(MyImages.config['little_4'])
             print('reload')
             self.browser.reload()
+            time.sleep(1)
+            arbeit == False
             
     def before_page_load(self):
         loadPage()

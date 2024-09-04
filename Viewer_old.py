@@ -14,7 +14,6 @@ from PySide6.QtWebEngineWidgets import QWebEngineView
 from PySide6.QtQuick import QQuickWindow, QSGRendererInterface
 QQuickWindow.setGraphicsApi(QSGRendererInterface.GraphicsApi.Software)
 
-
 myimages_schlüssel =('big_1', 'little_1', 'little_2', 'little_3', 'little_4')
 mypaths_schlüssel =('upload_folder', 'kamera_folder', 'viewer_path', 'upload_path', 'full_size_folder')
 mysettings_schlüssel =('upload', 'prozent_grosses_bild', 'prozent_kleines_bild', 'prozent_werbung', 'background_img', 'compressed_width')

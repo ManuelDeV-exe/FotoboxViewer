@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="de">
+
 <head>
-	<link rel="icon" type="image/x-icon" href="/data/favicon.ico">
+    <link rel="icon" type="image/x-icon" href="/data/favicon.ico">
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -34,6 +35,7 @@
             width: 175px;
             height: auto;
         }
+
         #logo_links {
             position: absolute;
             left: 5%;
@@ -42,12 +44,13 @@
             height: auto;
         }
 
-        #qr_code_pos { 
+        #qr_code_pos {
             position: absolute;
             left: 5%;
             top: 46%;
             width: 150px;
         }
+
         #qr_code {
             transform: translateY(-50%);
             width: 100%;
@@ -68,7 +71,7 @@
             position: absolute;
             width: ##big_img_width##;
             height: auto;
-            transform: translate(-50%,-50%);
+            transform: translate(-50%, -50%);
             top: 34.5%;
             border-radius: 0.85vw;
         }
@@ -88,12 +91,27 @@
             height: auto;
             border-radius: 0.35vw;
         }
-
     </style>
 </head>
+
 <body id="body">
 
-	<?php
+    <img id="logo_links" class="logo" src="##werbung_links##" alt="logo_links">
+    <div id="qr_code_pos">
+        <img id="qr_code_logo" class="logo" src="##werbung_rechts##" alt="qr_code_logo">
+        <img id="qr_code" class="logo" src="data/qrcode.svg" alt="qr_code">
+    </div>
+    <img id="logo_rechts" class="logo" src="##werbung_rechts##" alt="logo_rechts">
+
+    <img id="big_img" src="" alt="">
+    <div id="box">
+        <img id="img_1" class="img_small" src="" alt="">
+        <img id="img_2" class="img_small" src="" alt="">
+        <img id="img_3" class="img_small" src="" alt="">
+        <img id="img_4" class="img_small" src="" alt="">
+    </div>
+
+    <?php
 	
     $verzeichnis = ''; // Pfad zum Ordner, der die Bilder enthält
 	$bilder = glob($verzeichnis . '*.{JPG,jpg,jpeg,png,gif}', GLOB_BRACE); // Suche nach Bild-Dateien
@@ -108,16 +126,18 @@
 
     '<img id="logo_rechts" class="logo" src="##werbung_rechts##" alt="logo_rechts">'.
 
-    '<img id="big_img" src="' . $bilder[0] . '" alt="big_img">'.
+    '<img id="big_img" src="' . $bilder[4] . '" alt="big_img">'.
 	'</div>'.
 
     '<div id="box">'.
-    '    <img id="img_1" class="img_small" src="' . $bilder[1] . '" alt="img_1">'.
+    '    <img id="img_1" class="img_small" src="' . $bilder[3] . '" alt="img_1">'.
     '    <img id="img_2" class="img_small" src="' . $bilder[2] . '" alt="img_2">'.
-    '    <img id="img_3" class="img_small" src="' . $bilder[3] . '" alt="img_3">'.
-    '    <img id="img_4" class="img_small" src="' . $bilder[4] . '" alt="img_4">'.
+    '    <img id="img_3" class="img_small" src="' . $bilder[1] . '" alt="img_3">'.
+    '    <img id="img_4" class="img_small" src="' . $bilder[0] . '" alt="img_4">'.
     '</div>';
 		
 	?>
+
 </body>
+
 </html>

@@ -9,7 +9,7 @@ import psutil
 
 import reg_config
 myimages_schlüssel =('big_1', 'little_1', 'little_2', 'little_3', 'little_4')
-mypaths_schlüssel =('upload_folder', 'kamera_folder', 'viewer_path', 'upload_path', 'full_size_folder')
+mypaths_schlüssel =('upload_folder', 'kamera_folder', 'viewer_path', 'upload_path', 'full_size_folder', 'phpServer_path')
 mysettings_schlüssel =('upload', 'prozent_grosses_bild', 'prozent_kleines_bild', 'prozent_werbung', 'background_img', 'compressed_width')
 mypictrs_schlüssel =('ftp_host', 'ftp_user', 'ftp_password', 'galerie_folder')
 
@@ -60,14 +60,14 @@ class UiCore(QMainWindow):
         self.show()
 
     def openPGM(self):
-        # subprocess.Popen(MyPaths.config['viewer_path'], stdout=subprocess.PIPE)
-        os.spawnl(os.P_NOWAIT,MyPaths.config['viewer_path'], "--startup")
+        os.spawnl(os.P_NOWAIT, MyPaths.config['phpServer_path'], "--startup")
+        time.sleep(2)
+        os.spawnl(os.P_NOWAIT, MyPaths.config['viewer_path'], "--startup")
 
         if True if MySettings.config['upload'] == "True" else False == True:
             for proc in psutil.process_iter():
                 try:
                     if proc.name() == "FTP-Upload.exe":
-                        print("Notepad läuft bereits")
                         break
                 except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
                     pass
@@ -248,7 +248,8 @@ if __name__ == '__main__':
     if MySettings.config['prozent_werbung'] == '': MySettings.write('prozent_werbung', '15')
     if MyPaths.config['viewer_path'] == '': MyPaths.write('viewer_path', r'C:/Program Files/Fotobox/Viewer.exe')
     if MyPaths.config['upload_path'] == '': MyPaths.write('upload_path', r'C:/Program Files/Fotobox/FTP-Upload.exe')
-    if MySettings.config['compressed_width'] == '': MySettings.write('compressed_width', '2000')
+    if MyPaths.config['phpServer_path'] == '': MyPaths.write('phpServer_path', r'C:/Program Files/Fotobox/php_server.exe')
+    if MySettings.config['compressed_width'] == '': MySettings.write('compressed_width', '1600')
 
     app = QApplication(sys.argv)
 

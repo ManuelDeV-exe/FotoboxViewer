@@ -61,6 +61,7 @@ def upload_file(file):
                     # Rekursiver Aufruf für Unterverzeichnisse
                     ftp.mkd(item)
             
+            time.sleep(0.5)
             ftp.cwd("js")
             for item in os.listdir(os.path.abspath('data\ImagePage\js')):
                 local_path = os.path.join(os.path.abspath('data\ImagePage\js'), item)
@@ -77,8 +78,9 @@ def upload_file(file):
             ftp.cwd("data")
         except:
             ftp.mkd("data")
+            time.sleep(0.5)
+            ftp.cwd("data")
 
-        ftp.cwd("data")
         myfile = open(file, 'rb')
 
         filename = file.split("\\")
@@ -145,7 +147,7 @@ def watchfolder_upload():
         files = sorted(files, key=os.path.getmtime)
 
         for file in files:
-            if read_update_log(file) == True:
+            if read_update_log(file) == True and thread_wait == False:
                 upload_file(file)
         
         time.sleep(3)
