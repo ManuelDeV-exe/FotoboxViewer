@@ -39,12 +39,11 @@
         // Ausführen des SQL-Befehls
         if (mysqli_query($con, $sql)) {
             echo "Das Ausdrucken kann etwas Zeit in Anspruch nehmen, danke für benutzen 😍";
-            sleep(0.2);
-            echo "<script>window.close();</script>";
+            echo "<script>alert('Druckauftrag erfoglreich versendet. Drucken erfolgt in ca. 30Sekunden.');window.close();</script>";
         } else {
             echo "Fehler beim Erstellen des Eintrags: " . mysqli_error($con);
             sleep(10);
-            echo "<script>window.close();</script>";
+            echo "<script>alert('Fehler beim Erstellen des Eintrags');window.close();</script>";
         }   
     ?>
 </div>

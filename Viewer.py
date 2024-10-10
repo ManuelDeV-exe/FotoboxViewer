@@ -164,7 +164,7 @@ def loadPage():
     else:
         shutil.copytree(os.path.abspath("data"), os.path.abspath(path + r"\data"))
 
-    path = os.path.abspath(path + "\index.php")
+    path = os.path.abspath(path + r"\index.php")
     with open(path, 'w+') as f:
         f.write(html)
         f.close()

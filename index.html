@@ -116,6 +116,15 @@
     $verzeichnis = ''; // Pfad zum Ordner, der die Bilder enthält
 	$bilder = glob($verzeichnis . '*.{JPG,jpg,jpeg,png,gif}', GLOB_BRACE); // Suche nach Bild-Dateien
 			
+	// Sicherstellen, dass mindestens 4 Einträge in der Liste sind
+    $anzahlBilder = count($bilder);
+    if ($anzahlBilder < 5) {
+        // Füge Platzhalter (z. B. '#') hinzu, bis die Länge 4 erreicht ist
+        for ($i = $anzahlBilder; $i < 5; $i++) {
+            array_unshift($bilder, '#');
+        }
+    }
+	
 	echo
     '<img id="logo_links" class="logo" src="##werbung_links##" alt="logo_links">'.
 
@@ -126,14 +135,14 @@
 
     '<img id="logo_rechts" class="logo" src="##werbung_rechts##" alt="logo_rechts">'.
 
-    '<img id="big_img" src="' . $bilder[4] . '" alt="big_img">'.
+    '<img id="big_img" src="' . $bilder[4] . '" alt="Platzhalter_big_img">'.
 	'</div>'.
 
     '<div id="box">'.
-    '    <img id="img_1" class="img_small" src="' . $bilder[3] . '" alt="img_1">'.
-    '    <img id="img_2" class="img_small" src="' . $bilder[2] . '" alt="img_2">'.
-    '    <img id="img_3" class="img_small" src="' . $bilder[1] . '" alt="img_3">'.
-    '    <img id="img_4" class="img_small" src="' . $bilder[0] . '" alt="img_4">'.
+    '    <img id="img_1" class="img_small" src="' . $bilder[3] . '" alt="Platzhalter_img_1">'.
+    '    <img id="img_2" class="img_small" src="' . $bilder[2] . '" alt="Platzhalter_img_2">'.
+    '    <img id="img_3" class="img_small" src="' . $bilder[1] . '" alt="Platzhalter_img_3">'.
+    '    <img id="img_4" class="img_small" src="' . $bilder[0] . '" alt="Platzhalter_img_4">'.
     '</div>';
 		
 	?>

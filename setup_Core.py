@@ -15,7 +15,7 @@ build_exe_options = {
 # SETUP CX FREEZE
 setup(
     name="Core",
-    version="1.3.1",
+    version="1.3.2",
     description="",
     author="Buecherl M.",
     options={"build_exe": build_exe_options},

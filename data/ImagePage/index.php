@@ -25,6 +25,10 @@
     </div>
 	
 <div id="gallery">
+	<a href="https://3ddruck-mb.de/"><img src="./Logo.png" style="width: 10vw; cursor: pointer;"></a>
+	<?php 
+        include("header.html");
+    ?>
 	
 	<?php
 	$verzeichnis = 'data/'; // Pfad zum Ordner, der die Bilder enthält
@@ -32,7 +36,7 @@
     
     $i = 0;
 	foreach ($bilder as $bild) {
-		echo '<img class="images" index="' . $i . '" name="' . $bild . '" src="' . $bild . '" >'; // Bilder anzeigen
+		echo '<img class="images" index="' . $i . '" name="' . $bild . '" src="' . $bild . '" loading="lazy">'; // Bilder anzeigen
         $i += 1; 
     }
     echo '<p id="max_Index" index="' . $i . '" hidden></p>'

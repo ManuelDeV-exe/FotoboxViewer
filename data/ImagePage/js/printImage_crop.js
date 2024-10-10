@@ -1,12 +1,17 @@
 $(document).ready(function () {
 	var Koordinaten = "";
+	var Ratio = 1.56;
+	var breitenfaktor = 0.95;
 
 	const stage = Jcrop.attach('cropimage');
+	const rect = Jcrop.Rect.create(($("#cropimage").width() - ($("#cropimage").width() * breitenfaktor)) / 2, ($("#cropimage").height() - ($("#cropimage").width() * breitenfaktor) / Ratio) / 2, ($("#cropimage").width() * breitenfaktor), ($("#cropimage").width() * breitenfaktor) / Ratio);
 
 	stage.setOptions({
 		canResize: false, // Deaktiviert das Ändern der Größe
-		aspectRatio: 1.56   // Verhältnis von Breite zu Höhe, 1:1 für Quadrat
+		aspectRatio: Ratio   // Verhältnis von Breite zu Höhe, 1:1 für Quadrat
 	});
+
+	stage.newWidget(rect);
 
 	stage.listen('crop.update', (widget, e) => {
 		Koordinaten = widget.pos;

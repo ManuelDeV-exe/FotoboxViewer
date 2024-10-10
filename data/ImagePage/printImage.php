@@ -14,6 +14,7 @@
 <body>
 
 <div id="img_gesamt">
+    <h1 id="caption">Bitte wähle deinen Bildausschnitt aus</h1>
     <div>
         <?php
             $img_path = $_GET["path"];

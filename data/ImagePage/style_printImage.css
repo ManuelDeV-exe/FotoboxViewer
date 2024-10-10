@@ -10,6 +10,14 @@ body {
 	height: auto;
 }
 
+#caption {
+	text-align: center;
+	color: aliceblue;
+	font-style: normal;
+	font-weight: 900;
+	margin: 0;
+}
+
 #BTN_Box {
 	text-align: center;
 	justify-items: center;

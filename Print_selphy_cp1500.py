@@ -11,7 +11,7 @@ import PySide6
 from PySide6.QtGui import *
 from PySide6.QtWidgets import *
 
-from PIL import Image, ImageWin
+from PIL import Image, ImageWin, ImageCms
 
 logo_Pfad = os.path.abspath('data/icon.png')
 
@@ -81,6 +81,8 @@ def CropImage(img, cords, sqlIndex):
 
 def printImage(img):
     try:
+        
+        # Drucker suchen
         printers = win32print.EnumPrinters(win32print.PRINTER_ENUM_LOCAL | win32print.PRINTER_ENUM_CONNECTIONS)
         printer_name = None
         for printer in printers:
@@ -89,7 +91,7 @@ def printImage(img):
                 break
 
         if printer_name is None:
-            raise ValueError("Kein Samsung Drucker gefunden")
+            raise ValueError("Kein Selphy-Drucker gefunden")
 
         # Druckerkontext erstellen
         hprinter = win32print.OpenPrinter(printer_name)
@@ -110,7 +112,8 @@ def printImage(img):
 
         # Bild laden und auf spezifizierte Größe skalieren
         bmp = img.transpose(Image.ROTATE_90)
-        # bmp.show() # gedrehtes Bild anzeigen
+
+        # Bild auf den Druckkontext zeichnen (nach Konvertierung in den gewünschten Farbraum)
         dib = ImageWin.Dib(bmp)
         dib.draw(hDC.GetHandleOutput(), (0, 0, width_px, height_px))
 
@@ -119,6 +122,7 @@ def printImage(img):
         hDC.EndDoc()
         hDC.DeleteDC()
         win32print.ClosePrinter(hprinter)
+        # bmp.show()
 
     except Exception as e:
         print(f"Ein Fehler ist aufgetreten: {e}")
