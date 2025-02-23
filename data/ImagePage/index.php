@@ -6,6 +6,11 @@
     <title>Bildergalerie</title>
     <link rel="stylesheet" href="style.css">
 	<script src="js/jquery-3.7.1.min.js"></script>
+	
+	<meta property="og:image" content="https://3ddruck-mb.de/AbschiedPaul/image.jpg"/>
+	<meta property="og:title" content="Bildergalerie - Abschied Paul 2024"/>
+	<meta property="og:description" content="Abschiedsparty für Paul Kowalski 2024"/>
+	
 </head>
 <body>
 

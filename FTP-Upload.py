@@ -4,6 +4,7 @@ import threading
 import time
 import glob
 import shutil
+import paramiko
 
 import reg_config
 
@@ -36,70 +37,97 @@ class FTP_starten(QMainWindow):
         self.show()
 
 def upload_file(file):
-    try:       
-        ftp = ftplib.FTP_TLS()
-        ftp.connect(MyPictrs.config['ftp_host'])
+    try:
+        # Aufbau der SFTP-Verbindung über Port 22
+        transport = paramiko.Transport((MyPictrs.config['ftp_host'], 22))
+        transport.connect(username=MyPictrs.config['ftp_user'], password=MyPictrs.config['ftp_password'])
+        sftp = paramiko.SFTPClient.from_transport(transport)
 
-        ftp.auth()
-        ftp.prot_p()
-
-        ftp.login(MyPictrs.config['ftp_user'],MyPictrs.config['ftp_password'])
-
+        # Wechsel in das Galerie-Verzeichnis oder erstelle es, falls es nicht existiert
         try:
-            ftp.cwd(MyPictrs.config['galerie_folder'])
-        except:
-            ftp.mkd(MyPictrs.config['galerie_folder'])
-            ftp.cwd(MyPictrs.config['galerie_folder'])
+            sftp.chdir(MyPictrs.config['galerie_folder'])
+        except IOError:
+            sftp.mkdir(MyPictrs.config['galerie_folder'])
+            sftp.chdir(MyPictrs.config['galerie_folder'])
 
-            for item in os.listdir(os.path.abspath('data\ImagePage')):
-                local_path = os.path.join(os.path.abspath('data\ImagePage'), item)
+            # Upload von Dateien und Erstellen von Unterverzeichnissen aus data\ImagePage
+            local_dir = os.path.abspath(r'data\ImagePage')
+            for item in os.listdir(local_dir):
+                local_path = os.path.join(local_dir, item)
                 if os.path.isfile(local_path):
-                    # Lade die Datei hoch
-                    with open(local_path, 'rb') as file:
-                        ftp.storbinary(f'STOR {item}', file)
+                    sftp.put(local_path, item)
                 elif os.path.isdir(local_path):
-                    # Rekursiver Aufruf für Unterverzeichnisse
-                    ftp.mkd(item)
-            
+                    try:
+                        sftp.mkdir(item)
+                    except IOError:
+                        pass  # Verzeichnis existiert bereits
+
             time.sleep(0.5)
-            ftp.cwd("js")
-            for item in os.listdir(os.path.abspath('data\ImagePage\js')):
-                local_path = os.path.join(os.path.abspath('data\ImagePage\js'), item)
+            # Wechsel in das "js" Unterverzeichnis und lade dort Dateien hoch
+            try:
+                sftp.chdir("js")
+            except IOError:
+                sftp.mkdir("js")
+                sftp.chdir("js")
+            js_local_dir = os.path.abspath(r'data\ImagePage\js')
+            for item in os.listdir(js_local_dir):
+                local_path = os.path.join(js_local_dir, item)
                 if os.path.isfile(local_path):
-                    # Lade die Datei hoch
-                    with open(local_path, 'rb') as file:
-                        ftp.storbinary(f'STOR {item}', file)
+                    sftp.put(local_path, item)
                 elif os.path.isdir(local_path):
-                    # Rekursiver Aufruf für Unterverzeichnisse
-                    ftp.mkd(item)
-            ftp.cwd("../")
+                    try:
+                        sftp.mkdir(item)
+                    except IOError:
+                        pass
+            sftp.chdir("..")
 
+        # Wechsel in das "data"-Verzeichnis oder erstelle es, falls es nicht existiert
         try:
-            ftp.cwd("data")
-        except:
-            ftp.mkd("data")
+            sftp.chdir("data")
+        except IOError:
+            sftp.mkdir("data")
             time.sleep(0.5)
-            ftp.cwd("data")
+            sftp.chdir("data")
 
-        myfile = open(file, 'rb')
-
-        filename = file.split("\\")
-        filename = filename[len(filename)-1]
-
-        if filename.endswith(('.gif', '.jpeg', '.jpg')):
-                ftp.sendcmd('TYPE I')  # Binärmodus für Bilder
-        elif filename.endswith(('.html', '.php')):
-            ftp.sendcmd('TYPE A')  # ASCII-Modus für HTML und PHP
+        # Bestimme den Dateinamen aus dem übergebenen Pfad
+        filename = os.path.basename(file)
 
         print(f"Upload start -> {file}")
+        sftp.put(file, filename)
+        
+        # Warte, bis der Upload vollständig ist
+        wait_for_upload_completion(sftp, filename, file)
 
-        ftp.storbinary('STOR ' + filename, myfile)
-        ftp.quit()
+        sftp.close()
+        transport.close()
 
         log_uploaded_file(file)
         print(f"Upload beendet -> {file}")
+
     except Exception as ex:
-        print(ex)
+        print(f"Fehler: {ex}")
+
+def wait_for_upload_completion(sftp, remote_file, local_file, max_retries=10, wait_time=1):
+    """
+    Überprüft, ob die Datei auf dem Server vollständig hochgeladen wurde,
+    indem die Dateigröße verglichen wird.
+    """
+    local_size = os.path.getsize(local_file)
+
+    for attempt in range(max_retries):
+        try:
+            remote_size = sftp.stat(remote_file).st_size
+            if remote_size == local_size:
+                print(f"Datei vollständig hochgeladen: {remote_file}")
+                return
+            else:
+                print(f"Warten auf vollständigen Upload ({remote_size}/{local_size} Bytes)...")
+        except Exception as e:
+            print(f"Fehler beim Abrufen der Dateigröße ({remote_file}): {e}")
+
+        time.sleep(wait_time)
+
+    print(f"Warnung: Upload von {remote_file} konnte nicht verifiziert werden!")
 
 def log_uploaded_file(file):
     if os.path.exists(MyPaths.config['upload_folder'] + "/log.log") == False:
